@@ -1,0 +1,111 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User account and profile information",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Full name" },
+        "email": { "type": "string", "format": "email" },
+        "avatar": { "type": "string" },
+        "whmcsClientId": { "type": "string" },
+        "role": { "type": "string", "enum": ["user", "admin"] },
+        "twoFactorEnabled": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "email", "role"]
+    },
+    "Service": {
+      "title": "VPS Service",
+      "description": "A VPS instance assigned to a user",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "name": { "type": "string" },
+        "ip": { "type": "string" },
+        "status": { "type": "string", "enum": ["Active", "Pending", "Suspended"] },
+        "expires": { "type": "string" },
+        "type": { "type": "string" },
+        "location": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "name", "status"]
+    },
+    "Ticket": {
+      "title": "Support Ticket",
+      "description": "Customer support request",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "subject": { "type": "string" },
+        "status": { "type": "string", "enum": ["Open", "Answered", "Closed"] },
+        "lastUpdate": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "subject", "status"]
+    },
+    "Activity": {
+      "title": "User Activity",
+      "description": "Log of user actions",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "type": { "type": "string" },
+        "description": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "type", "description", "timestamp"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "In-app notification for the user",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "type": { "type": "string", "enum": ["info", "success", "warning", "error"] },
+        "read": { "type": "boolean" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "title", "message", "type", "read", "timestamp"]
+    },
+    "Settings": {
+      "title": "Global Settings",
+      "description": "Global application configuration and pricing",
+      "type": "object",
+      "properties": {
+        "domainPrice": { "type": "number" },
+        "vpsMarkup": { "type": "number" },
+        "paymentMethods": { "type": "array" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles"
+    },
+    "/services/{serviceId}": {
+      "schema": "Service",
+      "description": "VPS instances"
+    },
+    "/tickets/{ticketId}": {
+      "schema": "Ticket",
+      "description": "Support tickets"
+    },
+    "/activities/{activityId}": {
+      "schema": "Activity",
+      "description": "Activity logs"
+    },
+    "/notifications/{notificationId}": {
+      "schema": "Notification",
+      "description": "User notifications"
+    },
+    "/settings/{settingsId}": {
+      "schema": "Settings",
+      "description": "Global settings"
+    }
+  }
+}

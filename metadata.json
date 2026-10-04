@@ -1,0 +1,6 @@
+{
+  "name": "Jannat IT - Premium VPS & RDP Hosting",
+  "description": "Jannat IT provides high-performance Windows VPS, RDP hosting, and dedicated servers with 99.9% uptime and 24/7 support.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
