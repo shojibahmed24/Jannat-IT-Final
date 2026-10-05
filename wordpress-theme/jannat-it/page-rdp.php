@@ -7,21 +7,21 @@ get_header(); ?>
 
 <main>
     <!-- Hero Section -->
-    <section class="relative py-24 lg:py-32 overflow-hidden bg-mesh">
+    <section class="relative pt-20 pb-20 lg:pt-32 lg:pb-32 overflow-hidden bg-mesh">
         <div class="absolute inset-0 pointer-events-none">
             <div class="absolute inset-0 hero-grid opacity-20"></div>
         </div>
         <div class="max-w-7xl mx-auto px-6 relative text-center">
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-600/10 border border-orange-500/20 text-[10px] font-bold uppercase tracking-widest text-orange-500 mb-8">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-600/10 border border-orange-500/20 text-[10px] font-bold uppercase tracking-widest text-orange-500 mb-8" data-aos="fade-down">
                 High-Speed Remote Desktop
             </div>
-            <h1 class="text-5xl lg:text-7xl font-black text-white mb-8 tracking-tighter">Premium RDP Servers</h1>
-            <p class="text-xl text-slate-400 max-w-2xl mx-auto font-medium leading-relaxed mb-10">
-                Experience ultra-low latency RDP servers with 10Gbps uplink. Perfect for high-demand tasks.
+            <h1 class="text-5xl lg:text-7xl font-black text-white mb-8 tracking-tighter" data-aos="fade-up">Premium <br class="hidden md:block" /> RDP Servers</h1>
+            <p class="text-xl text-slate-400 max-w-2xl mx-auto font-medium leading-relaxed mb-10" data-aos="fade-up" data-aos-delay="100">
+                <?php the_content() ?: print("Experience ultra-low latency RDP servers with 10Gbps uplink. Perfect for high-demand tasks."); ?>
             </p>
 
             <!-- Pricing Toggle -->
-            <div class="flex items-center justify-center gap-4">
+            <div class="flex items-center justify-center gap-4" data-aos="fade-up" data-aos-delay="200">
                 <span class="text-sm font-bold text-slate-400 uppercase tracking-widest" id="rdp-monthly-label">Monthly</span>
                 <button id="rdp-billing-toggle" class="w-16 h-8 rounded-full bg-white/5 border border-white/10 relative p-1 transition-all">
                     <div id="rdp-toggle-circle" class="w-6 h-6 bg-orange-600 rounded-full shadow-lg shadow-orange-600/40 transition-all transform translate-x-0"></div>
@@ -32,13 +32,15 @@ get_header(); ?>
     </section>
 
     <!-- Pricing Section -->
-    <section class="py-32 relative">
+    <section class="py-16 md:py-32 relative">
         <div class="max-w-7xl mx-auto px-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <?php
                 $args = array(
                     'post_type' => 'hosting_plan',
                     'posts_per_page' => -1,
+                    'orderby' => 'menu_order',
+                    'order' => 'ASC',
                     'tax_query' => array(
                         array(
                             'taxonomy' => 'plan_category',
@@ -48,6 +50,7 @@ get_header(); ?>
                     ),
                 );
                 $query = new WP_Query($args);
+                $delay = 0;
 
                 if ($query->have_posts()) :
                     while ($query->have_posts()) : $query->the_post();
@@ -59,7 +62,7 @@ get_header(); ?>
                         $color = get_post_meta($id, '_plan_color', true) ?: 'orange';
                         $specs = explode("\n", get_post_meta($id, '_plan_features', true));
                 ?>
-                    <div class="relative p-10 rounded-[2.5rem] border transition-all duration-500 hover:scale-[1.02] <?php echo $recommended ? 'border-orange-500/50 bg-gradient-to-b from-orange-600/[0.08] to-transparent glow-orange-strong' : 'glass-card border-white/5 hover:border-white/20'; ?> group">
+                    <div class="relative p-10 rounded-[2.5rem] border transition-all duration-500 hover:scale-[1.02] <?php echo $recommended ? 'border-orange-500/50 bg-gradient-to-b from-orange-600/[0.08] to-transparent glow-orange-strong' : 'glass-card border-white/5 hover:border-white/20'; ?> group" data-aos="fade-up" data-aos-delay="<?php echo $delay; ?>">
                         <?php if ($recommended) : ?>
                             <div class="absolute -top-4 left-1/2 -translate-x-1/2 px-6 py-1.5 bg-orange-600 text-[10px] font-black text-white rounded-full uppercase tracking-[0.2em] shadow-xl shadow-orange-600/40">
                                 Best Value
@@ -94,13 +97,14 @@ get_header(); ?>
                             <?php endforeach; ?>
                         </div>
 
-                        <a href="<?php echo esc_url( home_url('/configure/' . $pid) ); ?>" class="w-full py-4 rounded-2xl font-black transition-all text-center block uppercase tracking-widest text-xs <?php 
-                            echo $recommended ? 'bg-orange-600 hover:bg-orange-500 text-white shadow-xl shadow-orange-600/30' : 'bg-white/5 hover:bg-white/10 text-white border border-white/10'; 
+                        <a href="<?php echo esc_url( home_url('/configure/' . $pid) ); ?>" class="w-full py-4 rounded-2xl font-black transition-all text-center block uppercase tracking-widest text-xs hover:scale-[1.02] active:scale-95 <?php 
+                            echo $recommended ? 'bg-orange-600 hover:bg-orange-500 text-white shadow-xl shadow-orange-600/30 hover:shadow-orange-500/50' : 'bg-white/5 hover:bg-white/10 text-white border border-white/10 hover:border-white/20'; 
                         ?>">
                             Deploy Now
                         </a>
                     </div>
                 <?php
+                        $delay += 100;
                     endwhile;
                     wp_reset_postdata();
                 else:

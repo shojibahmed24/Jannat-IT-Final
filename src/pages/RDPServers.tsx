@@ -26,17 +26,28 @@ const RDP_PLANS = [
     price: 47.99,
     oldPrice: 95.99,
     specs: ["8 vCPU Cores", "16 GB DDR4 RAM", "320 GB NVMe", "10Gbps Network", "Windows 2019/2022"],
+  },
+  {
+    id: "32gb-rdp",
+    name: "32GB RDP",
+    price: 89.99,
+    oldPrice: 159.99,
+    specs: ["16 vCPU Cores", "32 GB DDR4 RAM", "640 GB NVMe", "10Gbps Network", "Windows 2019/2022"],
   }
 ];
 
 export default function RDPServers() {
-  const { settings } = useApp();
+  const { settings, links } = useApp();
   const [isYearly, setIsYearly] = React.useState(false);
   const markup = settings?.vpsMarkup || 0;
 
   const calculatePrice = (base: number) => {
     const withMarkup = base * (1 + markup / 100);
-    return isYearly ? (withMarkup * 0.8).toFixed(2) : withMarkup.toFixed(2);
+    return isYearly ? (withMarkup * 12 * 0.8).toFixed(2) : withMarkup.toFixed(2);
+  };
+
+  const getPlanLink = (planId: string) => {
+    return links[planId.replace(/-/g, '_') + '_link'] || links['rdp_order'] || 'https://billing.jannatit.com/cart.php?gid=2';
   };
 
   return (
@@ -77,7 +88,7 @@ export default function RDPServers() {
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 mb-20">
           {RDP_PLANS.map((plan, idx) => (
             <motion.div 
               key={plan.name}
@@ -126,8 +137,10 @@ export default function RDPServers() {
                 ))}
               </ul>
               
-              <Link 
-                to={`/configure/${plan.id}`}
+              <a 
+                href={getPlanLink(plan.id)}
+                target="_blank"
+                rel="noopener noreferrer"
                 className={`w-full py-4 rounded-2xl font-black transition-all text-center block uppercase tracking-widest text-xs ${
                   plan.popular 
                     ? 'bg-orange-600 hover:bg-orange-500 text-white shadow-xl shadow-orange-600/30' 
@@ -135,7 +148,7 @@ export default function RDPServers() {
                 }`}
               >
                 Order Now
-              </Link>
+              </a>
             </motion.div>
           ))}
         </div>

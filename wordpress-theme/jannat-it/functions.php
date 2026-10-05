@@ -56,8 +56,26 @@ function jannat_it_scripts() {
     // Lucide Icons (Used in the React app)
     wp_enqueue_script( 'lucide-icons', 'https://unpkg.com/lucide@latest', array(), null, true );
     wp_add_inline_script( 'lucide-icons', 'lucide.createIcons();' );
+
+    // AOS Animations
+    wp_enqueue_style( 'aos-css', 'https://unpkg.com/aos@next/dist/aos.css', array(), null );
+    wp_enqueue_script( 'aos-js', 'https://unpkg.com/aos@next/dist/aos.js', array(), null, true );
+    wp_add_inline_script( 'aos-js', 'AOS.init({ duration: 800, once: true, offset: 100 });' );
+
+    // Tailwind Typography (for Blog Content)
+    wp_enqueue_style( 'tailwind-typography', 'https://unpkg.com/@tailwindcss/typography@0.5.9/dist/typography.min.css', array(), null );
 }
 add_action( 'wp_enqueue_scripts', 'jannat_it_scripts' );
+
+/**
+ * Custom Pagination Markup
+ */
+function jannat_it_pagination_styling($template) {
+    return str_replace('page-numbers', 'px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-slate-400 hover:bg-orange-600 hover:text-white transition-all mx-1', $template);
+}
+add_filter('navigation_markup_template', function($template) {
+    return '<nav class="navigation %1$s" role="navigation"><div class="flex items-center gap-2">%3$s</div></nav>';
+});
 
 /**
  * Phase 3: Custom Post Type for Plans
@@ -436,6 +454,59 @@ add_action('wp_ajax_domain_search', 'jannat_it_domain_search');
 add_action('wp_ajax_nopriv_domain_search', 'jannat_it_domain_search');
 
 /**
+ * Domain Search Shortcode [domain_search]
+ */
+function jannat_it_domain_search_shortcode() {
+    ob_start(); ?>
+    <div class="max-w-3xl mx-auto">
+        <form id="domain-search-form" class="relative group">
+            <input type="text" name="domain" placeholder="Enter your perfect domain name..." class="w-full px-8 py-6 bg-white/[0.03] border border-white/10 rounded-2xl text-white placeholder-slate-500 focus:outline-none focus:border-orange-500/50 transition-all text-lg font-medium pr-40">
+            <button type="submit" class="absolute right-2 top-2 bottom-2 px-8 bg-orange-600 hover:bg-orange-500 text-white font-black rounded-xl transition-all uppercase tracking-widest text-xs flex items-center gap-2">
+                Search
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+        </form>
+        <div id="domain-result" class="mt-4 text-center"></div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('domain-search-form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const domain = this.domain.value;
+                    if (!domain) return;
+                    
+                    const btn = this.querySelector('button');
+                    btn.disabled = true;
+                    btn.innerHTML = 'Searching...';
+
+                    fetch('<?php echo admin_url('admin-ajax.php'); ?>', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: 'action=domain_search&domain=' + encodeURIComponent(domain)
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            window.location.href = data.data.redirect_url;
+                        } else {
+                            alert(data.data);
+                            btn.disabled = false;
+                            btn.innerHTML = 'Search <i data-lucide="arrow-right" class="w-4 h-4"></i>';
+                            lucide.createIcons();
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+    <?php
+    return ob_get_clean();
+}
+add_shortcode('domain_search', 'jannat_it_domain_search_shortcode');
+
+/**
  * Final Launch Fixes: Basic SMTP Configuration
  * Note: Replace these with real data in WP admin or use a plugin like WP Mail SMTP
  */
@@ -451,3 +522,133 @@ function jannat_it_smtp_setup($phpmailer) {
     $phpmailer->FromName   = 'Jannat IT';
 }
 // add_action('phpmailer_init', 'jannat_it_smtp_setup'); // Uncomment and fill details to use
+
+/**
+ * Theme Customizer Settings
+ */
+function jannat_it_customize_register( $wp_customize ) {
+    // 1. Brand Section (Logo & Contact)
+    $wp_customize->add_section( 'jannat_it_brand', array(
+        'title'    => __( 'Brand & Contact Info', 'jannat-it' ),
+        'priority' => 30,
+    ) );
+
+    // Logo Upload
+    $wp_customize->add_setting( 'jannat_it_logo', array(
+        'default'   => '',
+        'transport' => 'refresh',
+    ) );
+    $wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, 'jannat_it_logo', array(
+        'label'    => __( 'Upload Logo', 'jannat-it' ),
+        'section'  => 'jannat_it_brand',
+        'settings' => 'jannat_it_logo',
+    ) ) );
+
+    // Brand Name
+    $wp_customize->add_setting( 'jannat_it_brand_name', array(
+        'default'   => 'Jannat IT',
+        'transport' => 'refresh',
+    ) );
+    $wp_customize->add_control( 'jannat_it_brand_name', array(
+        'label'    => __( 'Brand Name', 'jannat-it' ),
+        'section'  => 'jannat_it_brand',
+        'type'     => 'text',
+    ) );
+
+    // Promo Banner Text
+    $wp_customize->add_setting( 'jannat_it_promo_text', array(
+        'default'   => 'Limited-time offer — save up to 55% on annual VPS plans',
+        'transport' => 'refresh',
+    ) );
+    $wp_customize->add_control( 'jannat_it_promo_text', array(
+        'label'    => __( 'Promo Banner Text', 'jannat-it' ),
+        'section'  => 'jannat_it_brand',
+        'type'     => 'text',
+    ) );
+
+    // Client Login URL
+    $wp_customize->add_setting( 'jannat_it_login_url', array(
+        'default'   => '#',
+        'transport' => 'refresh',
+    ) );
+    $wp_customize->add_control( 'jannat_it_login_url', array(
+        'label'    => __( 'Client Login URL', 'jannat-it' ),
+        'section'  => 'jannat_it_brand',
+        'type'     => 'url',
+    ) );
+
+    // Primary Action URL (Order Now)
+    $wp_customize->add_setting( 'jannat_it_order_url', array(
+        'default'   => '#pricing',
+        'transport' => 'refresh',
+    ) );
+    $wp_customize->add_control( 'jannat_it_order_url', array(
+        'label'    => __( 'Primary Action URL (Order Now)', 'jannat-it' ),
+        'section'  => 'jannat_it_brand',
+        'type'     => 'text',
+    ) );
+
+    // 2. Social Links Section
+    $wp_customize->add_section( 'jannat_it_social', array(
+        'title'    => __( 'Social Media Links', 'jannat-it' ),
+        'priority' => 35,
+    ) );
+
+    $socials = array('facebook', 'twitter', 'linkedin', 'instagram', 'youtube');
+    foreach($socials as $social) {
+        $wp_customize->add_setting( "jannat_it_{$social}_url", array(
+            'default'   => '',
+            'transport' => 'refresh',
+        ) );
+        $wp_customize->add_control( "jannat_it_{$social}_url", array(
+            'label'    => ucfirst($social) . ' URL',
+            'section'  => 'jannat_it_social',
+            'type'     => 'url',
+        ) );
+    }
+
+    // 3. WHMCS Configuration
+    $wp_customize->add_section( 'jannat_it_whmcs', array(
+        'title'    => __( 'WHMCS Integration', 'jannat-it' ),
+        'priority' => 40,
+    ) );
+
+    $wp_customize->add_setting( 'jannat_it_whmcs_url', array(
+        'default'   => '',
+        'transport' => 'refresh',
+    ) );
+    $wp_customize->add_control( 'jannat_it_whmcs_url', array(
+        'label'    => __( 'WHMCS Base URL', 'jannat-it' ),
+        'description' => 'e.g., https://billing.jannatit.net/',
+        'section'  => 'jannat_it_whmcs',
+        'type'     => 'url',
+    ) );
+}
+add_action( 'customize_register', 'jannat_it_customize_register' );
+
+/**
+ * Structured Data (JSON-LD)
+ */
+function jannat_it_structured_data() {
+    $logo = get_theme_mod( 'jannat_it_logo' );
+    $brand_name = get_theme_mod( 'jannat_it_brand_name', get_bloginfo('name') );
+    $url = home_url();
+
+    $schema = array(
+        '@context' => 'https://schema.org',
+        '@type'    => 'Organization',
+        'name'     => $brand_name,
+        'url'      => $url,
+        'logo'     => $logo,
+        'sameAs'   => array()
+    );
+
+    $socials = array('facebook', 'twitter', 'linkedin', 'instagram', 'youtube');
+    foreach($socials as $social) {
+        $link = get_theme_mod("jannat_it_{$social}_url");
+        if ($link) $schema['sameAs'][] = $link;
+    }
+
+    echo '<script type="application/ld+json">' . json_encode($schema) . '</script>';
+}
+add_action('wp_head', 'jannat_it_structured_data');

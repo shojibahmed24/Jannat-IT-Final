@@ -26,17 +26,28 @@ const VPS_PLANS = [
     price: 24.99,
     specs: ["4 vCPU Cores", "8 GB RAM", "160 GB NVMe", "4 TB Bandwidth", "2 IPv4 Addresses"],
     color: "from-purple-500 to-indigo-600"
+  },
+  {
+    id: "ultimate-vps",
+    name: "Ultimate VPS",
+    price: 49.99,
+    specs: ["8 vCPU Cores", "16 GB RAM", "250 GB NVMe", "Unlimited Bandwidth", "2 IPv4 Addresses"],
+    color: "from-emerald-500 to-teal-600"
   }
 ];
 
 export default function VPSHosting() {
-  const { settings } = useApp();
+  const { settings, links } = useApp();
   const [isYearly, setIsYearly] = React.useState(false);
   const markup = settings?.vpsMarkup || 0;
 
   const calculatePrice = (base: number) => {
     const withMarkup = base * (1 + markup / 100);
-    return isYearly ? (withMarkup * 0.8).toFixed(2) : withMarkup.toFixed(2);
+    return isYearly ? (withMarkup * 12 * 0.8).toFixed(2) : withMarkup.toFixed(2);
+  };
+
+  const getPlanLink = (planId: string) => {
+    return links[planId.replace(/-/g, '_') + '_link'] || links['vps_order'] || 'https://billing.jannatit.com/cart.php?gid=1';
   };
 
   return (
@@ -77,7 +88,7 @@ export default function VPSHosting() {
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 mb-20">
           {VPS_PLANS.map((plan, idx) => (
             <motion.div 
               key={plan.name}
@@ -121,8 +132,10 @@ export default function VPSHosting() {
                 ))}
               </ul>
               
-              <Link 
-                to={`/configure/${plan.id}`}
+              <a 
+                href={getPlanLink(plan.id)}
+                target="_blank"
+                rel="noopener noreferrer"
                 className={`w-full py-4 rounded-2xl font-black transition-all text-center block uppercase tracking-widest text-xs ${
                   plan.popular 
                     ? 'bg-orange-600 hover:bg-orange-500 text-white shadow-xl shadow-orange-600/30' 
@@ -130,7 +143,7 @@ export default function VPSHosting() {
                 }`}
               >
                 Deploy Now
-              </Link>
+              </a>
             </motion.div>
           ))}
         </div>

@@ -23,45 +23,34 @@ import {
   ArrowRight
 } from 'lucide-react';
 
-type AdminTab = 'overview' | 'users' | 'services' | 'tickets' | 'billing';
+type AdminTab = 'overview' | 'users' | 'services' | 'tickets' | 'billing' | 'links' | 'settings';
 
 export default function AdminPanel() {
-  const { user, allUsers, allServices, allTickets, allActivities, systemStatus, settings, updateSettings, loading } = useApp();
-  const [activeTab, setActiveTab] = useState<AdminTab>('overview');
+  const { links, updateLink, loading, settings, updateSettings, systemStatus } = useApp();
+  const [activeTab, setActiveTab] = useState<AdminTab>('links');
   const [searchQuery, setSearchQuery] = useState('');
 
-  if (loading) return null;
-  if (user?.role !== 'admin') {
-    return (
-      <div className="min-h-screen bg-[#070708] flex items-center justify-center p-6">
-        <div className="text-center">
-          <Shield className="w-16 h-16 text-red-500 mx-auto mb-4 opacity-50" />
-          <h1 className="text-2xl font-bold text-white">Access Denied</h1>
-          <p className="text-slate-500">You do not have permission to view this page.</p>
-        </div>
-      </div>
-    );
-  }
+  if (loading) return (
+    <div className="min-h-screen bg-[#070708] flex items-center justify-center">
+      <RefreshCw className="w-8 h-8 text-orange-500 animate-spin" />
+    </div>
+  );
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'users':
-        return <UserManagement users={allUsers} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />;
-      case 'services':
-        return <ServiceManagement services={allServices} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />;
-      case 'tickets':
-        return <TicketManagement tickets={allTickets} />;
-      case 'billing':
+      case 'links':
+        return <LinkManagement links={links} onUpdate={updateLink} />;
+      case 'settings':
         return <BillingManagement settings={settings} onUpdate={updateSettings} />;
       default:
         return (
           <AdminOverview 
-            totalUsers={allUsers.length} 
-            totalServices={allServices.length} 
-            openTickets={allTickets.filter(t => t.status === 'Open').length}
-            activities={allActivities}
+            totalUsers={0} 
+            totalServices={0} 
+            openTickets={0}
+            activities={[]}
             systemStatus={systemStatus}
-            allInvoices={allInvoices}
+            allInvoices={[]}
           />
         );
     }
@@ -80,21 +69,18 @@ export default function AdminPanel() {
           </div>
 
           <nav className="space-y-2">
-            <AdminNavItem icon={LayoutDashboard} label="Overview" active={activeTab === 'overview'} onClick={() => setActiveTab('overview')} />
-            <AdminNavItem icon={Users} label="Users" count={allUsers.length} active={activeTab === 'users'} onClick={() => setActiveTab('users')} />
-            <AdminNavItem icon={Server} label="All VPS" count={allServices.length} active={activeTab === 'services'} onClick={() => setActiveTab('services')} />
-            <AdminNavItem icon={TicketIcon} label="Tickets" count={allTickets.filter(t => t.status === 'Open').length} active={activeTab === 'tickets'} onClick={() => setActiveTab('tickets')} />
-            <AdminNavItem icon={CreditCard} label="Billing" active={activeTab === 'billing'} onClick={() => setActiveTab('billing')} />
-            <AdminNavItem icon={Settings} label="Settings" active={activeTab === 'billing'} onClick={() => setActiveTab('billing')} />
+            <AdminNavItem icon={LayoutDashboard} label="System Status" active={activeTab === 'overview'} onClick={() => setActiveTab('overview')} />
+            <AdminNavItem icon={ExternalLink} label="Manage Links" active={activeTab === 'links'} onClick={() => setActiveTab('links')} />
+            <AdminNavItem icon={Settings} label="Global Settings" active={activeTab === 'settings'} onClick={() => setActiveTab('settings')} />
           </nav>
         </div>
 
         <div className="mt-auto p-8 border-t border-white/5">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white font-bold">{user.avatar}</div>
+            <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white font-bold">AD</div>
             <div>
-              <div className="text-sm font-bold text-white truncate w-32">{user.name}</div>
-              <div className="text-[10px] text-orange-500 font-bold uppercase tracking-widest">Administrator</div>
+              <div className="text-sm font-bold text-white truncate w-32">Administrator</div>
+              <div className="text-[10px] text-orange-500 font-bold uppercase tracking-widest">Secret Access</div>
             </div>
           </div>
         </div>
@@ -614,6 +600,85 @@ function LoadBar({ label, value, color = "bg-emerald-500" }: any) {
           animate={{ width: `${value}%` }}
           className={`h-full ${color}`}
         />
+      </div>
+    </div>
+  );
+}
+
+function LinkManagement({ links, onUpdate }: any) {
+  const [isSaving, setIsSaving] = useState<string | null>(null);
+
+  const handleUpdate = async (slug: string, url: string, name: string) => {
+    setIsSaving(slug);
+    try {
+      await onUpdate(slug, url, name);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSaving(null);
+    }
+  };
+
+  const linkDescriptions: Record<string, string> = {
+    'client_login': 'Main WHMCS Client Area login page.',
+    'order_now': 'Default CTA button link for the hero section.',
+    'vps_order': 'General VPS ordering page link.',
+    'rdp_order': 'General RDP ordering page link.',
+    'hosting_order': 'General Hosting ordering page link.',
+    'standard_vps_link': 'Specific link for Standard VPS plan.',
+    'premium_rdp_link': 'Specific link for Premium RDP plan.',
+    'dedicated_server_link': 'Specific link for Dedicated Server plan.',
+    'ultimate_vps_link': 'Specific link for Ultimate VPS plan.',
+    'starter_vps_link': 'Specific link for Starter VPS plan.',
+    'business_vps_link': 'Specific link for Business VPS plan.',
+    'enterprise_vps_link': 'Specific link for Enterprise VPS plan.',
+    '4gb_rdp_link': 'Specific link for 4GB RDP plan.',
+    '8gb_rdp_link': 'Specific link for 8GB RDP plan.',
+    '16gb_rdp_link': 'Specific link for 16GB RDP plan.',
+    '32gb_rdp_link': 'Specific link for 32GB RDP plan.',
+    'power_e3_link': 'Specific link for Power E3 Dedicated plan.',
+    'elite_epyc_link': 'Specific link for Elite Epyc Dedicated plan.',
+    'titan_dual_link': 'Specific link for Titan Dual Dedicated plan.',
+    'ultimate_epyc_link': 'Specific link for Ultimate Epyc Dedicated plan.'
+  };
+
+  // Ensure all keys are present even if not in 'links' yet
+  const allKeys = Array.from(new Set([...Object.keys(linkDescriptions), ...Object.keys(links)]));
+
+  return (
+    <div className="space-y-10 max-w-4xl">
+      <header>
+        <h2 className="text-3xl font-bold text-white">External Redirection Links</h2>
+        <p className="text-slate-500">Manage where users are sent when clicking CTA buttons. Use slugs like 'starter_vps_link' for specific plans.</p>
+      </header>
+
+      <div className="grid grid-cols-1 gap-6">
+        {allKeys.map((slug) => {
+          const url = links[slug] || '';
+          return (
+            <div key={slug} className="bg-white/[0.02] border border-white/5 rounded-2xl p-8 space-y-4">
+              <div className="flex justify-between items-center">
+                <div>
+                  <h4 className="text-sm font-bold text-white uppercase tracking-widest">{slug.replace(/_/g, ' ')}</h4>
+                  <p className="text-xs text-slate-500">{linkDescriptions[slug] || 'Custom redirection link.'}</p>
+                </div>
+                <button 
+                  onClick={() => {
+                    const newUrl = prompt(`Enter new URL for ${slug}:`, url as string);
+                    if (newUrl !== null) handleUpdate(slug, newUrl, slug.replace(/_/g, ' '));
+                  }}
+                  disabled={isSaving === slug}
+                  className="text-orange-500 hover:text-orange-400 font-bold text-sm flex items-center gap-2"
+                >
+                  {isSaving === slug ? <RefreshCw className="w-4 h-4 animate-spin" /> : (url ? 'Edit URL' : 'Add URL')}
+                </button>
+              </div>
+              <div className="bg-black/40 rounded-lg p-3 overflow-hidden text-ellipsis whitespace-nowrap border border-white/5 min-h-[40px]">
+                <code className="text-xs text-slate-400">{url || 'Not set (will use fallback)'}</code>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

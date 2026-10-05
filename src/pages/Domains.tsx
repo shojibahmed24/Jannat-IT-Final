@@ -6,7 +6,7 @@ import { Search, Globe, Shield, Zap, Check, AlertCircle, ShoppingCart, Loader2 }
 import { useApp } from '../context/AppContext';
 
 export default function Domains() {
-  const { settings } = useApp();
+  const { settings, links } = useApp();
   const [searchTerm, setSearchTerm] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [results, setResults] = useState<{ domain: string, available: boolean, price: string } | null>(null);
@@ -117,13 +117,15 @@ export default function Domains() {
                       <div className="text-3xl font-black text-white">${results.price}</div>
                       <div className="text-[10px] text-slate-500 uppercase font-black tracking-widest mt-1">Yearly Price</div>
                     </div>
-                    <Link 
-                      to="/dashboard" 
+                    <a 
+                      href={`${links['whmcs_url'] || 'https://billing.jannatit.com'}/cart.php?a=add&domain=register&query=${results.domain}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex-1 md:flex-none px-10 py-5 bg-orange-600 hover:bg-orange-500 text-white font-black rounded-2xl transition-all shadow-xl shadow-orange-600/30 flex items-center justify-center gap-2 uppercase tracking-widest text-xs"
                     >
                       <ShoppingCart className="w-5 h-5" />
                       Buy Now
-                    </Link>
+                    </a>
                   </div>
                 )}
               </motion.div>
@@ -184,7 +186,14 @@ export default function Domains() {
                     <td className="px-10 py-8 font-bold">${item.price}</td>
                     <td className="px-10 py-8 font-bold">${item.price}</td>
                     <td className="px-10 py-8 text-right">
-                      <Link to="/dashboard" className="px-6 py-2 bg-white/5 hover:bg-orange-600 hover:text-white text-slate-400 font-black rounded-xl transition-all inline-block uppercase tracking-widest text-[10px]">Register</Link>
+                      <a 
+                        href={`${links['whmcs_url'] || 'https://billing.jannatit.com'}/cart.php?a=add&domain=register`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-6 py-2 bg-white/5 hover:bg-orange-600 hover:text-white text-slate-400 font-black rounded-xl transition-all inline-block uppercase tracking-widest text-[10px]"
+                      >
+                        Register
+                      </a>
                     </td>
                   </tr>
                 ))}

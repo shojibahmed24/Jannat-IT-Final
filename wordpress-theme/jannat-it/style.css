@@ -113,3 +113,78 @@ Text Domain: jannat-it
         radial-gradient(at 50% 0%, rgba(234, 88, 12, 0.1) 0, transparent 50%), 
         radial-gradient(at 100% 0%, rgba(220, 38, 38, 0.15) 0, transparent 50%);
 }
+
+/* Contact Form 7 Dark Theme Styling */
+.wpcf7-form {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 2.5rem;
+    border-radius: 2rem;
+}
+
+.wpcf7-form label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #94a3b8;
+    margin-bottom: 0.75rem;
+}
+
+.wpcf7-form-control:not(.wpcf7-submit) {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    padding: 1rem 1.25rem;
+    color: #fff;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.wpcf7-form-control:not(.wpcf7-submit):focus {
+    outline: none;
+    border-color: #f97316;
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 20px rgba(249, 115, 22, 0.1);
+}
+
+.wpcf7-submit {
+    width: 100%;
+    background: #FF4D00;
+    color: #fff;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 1.25rem;
+    border-radius: 1rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+}
+
+.wpcf7-submit:hover {
+    background: #FF6A00;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(255, 77, 0, 0.3);
+}
+
+.wpcf7-not-valid-tip {
+    color: #ef4444;
+    font-size: 0.75rem;
+    margin-top: 0.5rem;
+    font-weight: 700;
+}
+
+.wpcf7-response-output {
+    border-radius: 1rem !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    background: rgba(255, 255, 255, 0.02) !important;
+    color: #94a3b8 !important;
+    padding: 1rem !important;
+    margin-top: 2rem !important;
+    text-align: center;
+    font-weight: 700;
+}

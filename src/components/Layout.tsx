@@ -12,7 +12,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useApp } from '../context/AppContext';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const { user, firebaseUser } = useApp();
+  const { user, links } = useApp();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
@@ -78,28 +78,22 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
             {/* Zone 3: Actions */}
             <div className="flex items-center gap-4">
-              {firebaseUser ? (
-                <Link to="/dashboard" className="flex items-center gap-3 group">
-                  <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:border-[#FF4D00]/50 transition-all">
-                    <User className="w-5 h-5 text-slate-400 group-hover:text-[#FF4D00] transition-colors" />
-                  </div>
-                </Link>
-              ) : (
-                <>
-                  <Link 
-                    to="/login" 
-                    className="hidden sm:block text-sm font-bold border border-white/10 px-6 py-2.5 rounded-lg hover:bg-white/5 transition-all text-white"
-                  >
-                    Client Login
-                  </Link>
-                  <Link 
-                    to="/vps" 
-                    className="px-6 py-2.5 text-sm font-bold bg-[#FF4D00] hover:bg-[#FF6A00] text-white rounded-lg transition-all shadow-lg shadow-orange-600/20 whitespace-nowrap"
-                  >
-                    Order Now
-                  </Link>
-                </>
-              )}
+              <a 
+                href={links['client_login'] || 'https://billing.jannatit.com/clientarea.php'} 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden sm:block text-sm font-bold border border-white/10 px-6 py-2.5 rounded-lg hover:bg-white/5 transition-all text-white"
+              >
+                Client Login
+              </a>
+              <a 
+                href={links['order_now'] || 'https://billing.jannatit.com/cart.php?a=add&pid=1'} 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-6 py-2.5 text-sm font-bold bg-[#FF4D00] hover:bg-[#FF6A00] text-white rounded-lg transition-all shadow-lg shadow-orange-600/20 whitespace-nowrap"
+              >
+                Order Now
+              </a>
               <button 
                 className="lg:hidden p-2 text-slate-400 hover:text-white"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -165,20 +159,24 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </div>
 
               <div className="mt-16 pt-12 border-t border-white/5 flex flex-col gap-6">
-                <Link 
-                  to="/login" 
+                <a 
+                  href={links['client_login']}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   onClick={() => setIsMenuOpen(false)}
                   className="w-full py-4 border border-white/10 text-white font-bold rounded-xl text-center"
                 >
                   Client Login
-                </Link>
-                <Link 
-                  to="/vps" 
+                </a>
+                <a 
+                  href={links['order_now']}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   onClick={() => setIsMenuOpen(false)}
                   className="w-full py-4 bg-[#FF4D00] text-white font-black rounded-xl text-center shadow-xl shadow-orange-600/20"
                 >
                   Order Now
-                </Link>
+                </a>
               </div>
             </nav>
           </motion.div>

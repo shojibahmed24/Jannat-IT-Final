@@ -8,10 +8,6 @@ import RDPServers from './pages/RDPServers';
 import DedicatedServers from './pages/DedicatedServers';
 import Domains from './pages/Domains';
 import AboutUs from './pages/AboutUs';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import Dashboard from './pages/Dashboard';
-import ConfigurePlan from './pages/ConfigurePlan';
 import AdminPanel from './pages/AdminPanel';
 
 export default function App() {
@@ -26,11 +22,8 @@ export default function App() {
             <Route path="/dedicated" element={<DedicatedServers />} />
             <Route path="/domains" element={<Domains />} />
             <Route path="/about" element={<AboutUs />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/admin" element={<AdminPanel />} />
-            <Route path="/configure/:planId" element={<ConfigurePlan />} />
+            <Route path="/admin-secret-2026" element={<AdminPanel />} />
+            <Route path="*" element={<Home />} />
           </Routes>
         </Layout>
       </Router>

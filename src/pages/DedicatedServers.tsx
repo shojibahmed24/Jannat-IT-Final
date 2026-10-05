@@ -23,17 +23,27 @@ const DEDICATED_PLANS = [
     name: "Titan Dual Xeon",
     price: 299.99,
     specs: ["2x Intel Xeon Gold", "40 Cores / 80 Threads", "256 GB RAM", "2x 2 TB NVMe", "10Gbps Dedicated"],
+  },
+  {
+    id: "ultimate-epyc",
+    name: "Ultimate Epyc",
+    price: 499.99,
+    specs: ["2x AMD EPYC 7763", "128 Cores / 256 Threads", "1 TB DDR4 RAM", "4x 2 TB NVMe", "25Gbps Dedicated"],
   }
 ];
 
 export default function DedicatedServers() {
-  const { settings } = useApp();
+  const { settings, links } = useApp();
   const [isYearly, setIsYearly] = React.useState(false);
   const markup = settings?.vpsMarkup || 0;
 
   const calculatePrice = (base: number) => {
     const withMarkup = base * (1 + markup / 100);
-    return isYearly ? (withMarkup * 0.8).toFixed(2) : withMarkup.toFixed(2);
+    return isYearly ? (withMarkup * 12 * 0.8).toFixed(2) : withMarkup.toFixed(2);
+  };
+
+  const getPlanLink = (planId: string) => {
+    return links[planId.replace(/-/g, '_') + '_link'] || links['hosting_order'] || 'https://billing.jannatit.com/cart.php?gid=3';
   };
 
   return (
@@ -74,7 +84,7 @@ export default function DedicatedServers() {
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 mb-20">
           {DEDICATED_PLANS.map((plan, idx) => (
             <motion.div 
               key={plan.name}
@@ -118,8 +128,10 @@ export default function DedicatedServers() {
                 ))}
               </ul>
               
-              <Link 
-                to={`/configure/${plan.id}`}
+              <a 
+                href={getPlanLink(plan.id)}
+                target="_blank"
+                rel="noopener noreferrer"
                 className={`w-full py-4 rounded-2xl font-black transition-all text-center block uppercase tracking-widest text-xs ${
                   plan.popular 
                     ? 'bg-orange-600 hover:bg-orange-500 text-white shadow-xl shadow-orange-600/30' 
@@ -127,7 +139,7 @@ export default function DedicatedServers() {
                 }`}
               >
                 Configure Server
-              </Link>
+              </a>
             </motion.div>
           ))}
         </div>

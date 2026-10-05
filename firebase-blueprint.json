@@ -80,6 +80,18 @@
         "paymentMethods": { "type": "array" },
         "updatedAt": { "type": "string", "format": "date-time" }
       }
+    },
+    "ExternalLink": {
+      "title": "External Link",
+      "description": "Redirect links for products and actions (e.g., WHMCS)",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "slug": { "type": "string" },
+        "url": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "slug", "url"]
     }
   },
   "firestore": {
@@ -106,6 +118,10 @@
     "/settings/{settingsId}": {
       "schema": "Settings",
       "description": "Global settings"
+    },
+    "/external_links/{linkId}": {
+      "schema": "ExternalLink",
+      "description": "External redirection links"
     }
   }
 }

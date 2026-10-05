@@ -62,7 +62,7 @@ $features = [
 
 <main>
     <!-- Hero Section -->
-    <section class="relative pt-20 pb-32 overflow-hidden bg-[#0A0A0B]">
+    <section class="relative pt-12 pb-16 md:pt-20 md:pb-32 overflow-hidden bg-[#0A0A0B]">
         <!-- Background Decorative Gradient -->
         <div class="absolute inset-0 pointer-events-none">
             <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,_rgba(255,77,0,0.05)_0%,_transparent_70%)]"></div>
@@ -106,10 +106,10 @@ $features = [
                 </p>
 
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-                    <a href="#pricing" class="w-full sm:w-auto px-10 py-4 bg-[#FF4D00] hover:bg-[#FF6A00] text-white font-bold rounded-xl transition-all shadow-xl shadow-orange-600/20 text-lg">
+                    <a href="#pricing" class="w-full sm:w-auto px-10 py-4 bg-[#FF4D00] hover:bg-[#FF6A00] text-white font-bold rounded-xl transition-all shadow-xl shadow-orange-600/20 text-lg hover:shadow-[#FF4D00]/40 hover:scale-[1.02] active:scale-95">
                         See Plans & Pricing
                     </a>
-                    <button onclick="Tawk_API.toggle()" class="w-full sm:w-auto px-10 py-4 border border-white/10 hover:bg-white/5 text-white font-bold rounded-xl transition-all text-lg">
+                    <button onclick="Tawk_API.toggle()" class="w-full sm:w-auto px-10 py-4 border border-white/10 hover:bg-white/5 text-white font-bold rounded-xl transition-all text-lg hover:border-[#FF4D00]/30">
                         Chat With Sales
                     </button>
                 </div>
@@ -134,7 +134,7 @@ $features = [
     </section>
 
     <!-- Pricing Section -->
-    <section id="pricing" class="py-32 relative overflow-hidden">
+    <section id="pricing" class="py-16 md:py-32 relative overflow-hidden" data-aos="fade-up">
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-orange-600/5 rounded-full blur-[160px] pointer-events-none"></div>
         
         <div class="max-w-7xl mx-auto px-6 relative">
@@ -194,8 +194,8 @@ $features = [
                             <?php endforeach; ?>
                         </div>
 
-                        <a href="<?php echo esc_url( home_url('/configure/' . $plan['pid']) ); ?>" class="w-full py-4 rounded-2xl font-black transition-all text-center block uppercase tracking-widest text-xs <?php 
-                            echo $plan['recommended'] ? 'bg-orange-600 hover:bg-orange-500 text-white shadow-xl shadow-orange-600/30' : 'bg-white/5 hover:bg-white/10 text-white border border-white/10'; 
+                        <a href="<?php echo esc_url( home_url('/configure/' . $plan['pid']) ); ?>" class="w-full py-4 rounded-2xl font-black transition-all text-center block uppercase tracking-widest text-xs hover:scale-[1.02] active:scale-95 <?php 
+                            echo $plan['recommended'] ? 'bg-orange-600 hover:bg-orange-500 text-white shadow-xl shadow-orange-600/30 hover:shadow-orange-500/50' : 'bg-white/5 hover:bg-white/10 text-white border border-white/10 hover:border-white/20'; 
                         ?>">
                             Deploy Instance
                         </a>
@@ -244,7 +244,7 @@ $features = [
     </section>
 
     <!-- FAQ Section -->
-    <section class="py-32 bg-[#0A0A0B] relative overflow-hidden">
+    <section class="py-16 md:py-32 bg-[#0A0A0B] relative overflow-hidden" data-aos="fade-up">
         <div class="max-w-4xl mx-auto px-6 relative z-10">
             <div class="text-center mb-20">
                 <h2 class="text-4xl lg:text-5xl font-black text-white mb-6 tracking-tighter">Frequently Asked Questions</h2>
@@ -372,7 +372,7 @@ $features = [
     </script>
 
     <!-- Features Grid -->
-    <section class="py-32 bg-[#050506]">
+    <section class="py-16 md:py-32 bg-[#050506]" data-aos="fade-up">
         <div class="max-w-7xl mx-auto px-6">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <?php foreach ($features as $feature) : ?>
@@ -391,9 +391,9 @@ $features = [
     </section>
 
     <!-- Hardware Bento Grid -->
-    <section class="py-24 bg-[#0A0A0B] relative overflow-hidden">
+    <section class="py-12 md:py-24 bg-[#0A0A0B] relative overflow-hidden">
         <div class="max-w-7xl mx-auto px-6 relative z-10">
-            <div class="text-center mb-16">
+            <div class="text-center mb-16" data-aos="fade-up">
                 <h2 class="text-sm font-black text-[#FF4D00] uppercase tracking-[0.3em] mb-4">The Infrastructure</h2>
                 <p class="text-4xl md:text-5xl font-black text-white tracking-tight">Enterprise Grade Backbone</p>
             </div>
@@ -496,7 +496,7 @@ $features = [
     </section>
 
     <!-- CTA Section -->
-    <section class="py-40 relative overflow-hidden">
+    <section class="py-20 md:py-40 relative overflow-hidden" data-aos="zoom-in">
         <div class="absolute inset-0 bg-gradient-to-b from-transparent via-orange-600/5 to-transparent"></div>
         <div class="max-w-4xl mx-auto px-6 text-center relative">
             <div>
@@ -505,10 +505,10 @@ $features = [
                     Join thousands of developers and businesses who trust <span class="text-orange-500 font-bold">Jannat IT</span> for their mission-critical infrastructure.
                 </p>
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
-                    <a href="<?php echo esc_url( home_url('/vps') ); ?>" class="w-full sm:w-auto px-12 py-5 bg-white text-black font-black rounded-2xl hover:bg-slate-100 transition-all text-center uppercase tracking-widest text-xs shadow-2xl shadow-white/5">
+                    <a href="<?php echo esc_url( home_url('/vps') ); ?>" class="w-full sm:w-auto px-12 py-5 bg-[#FF4D00] text-white font-black rounded-2xl hover:bg-[#FF6A00] transition-all text-center uppercase tracking-widest text-xs shadow-2xl shadow-orange-600/20 hover:shadow-[#FF4D00]/40 hover:scale-[1.05] active:scale-95">
                         Get Started Now
                     </a>
-                    <button onclick="Tawk_API.toggle()" class="w-full sm:w-auto px-12 py-5 bg-white/5 text-white border border-white/10 font-black rounded-2xl hover:bg-white/10 transition-all text-center uppercase tracking-widest text-xs backdrop-blur-sm">
+                    <button onclick="Tawk_API.toggle()" class="w-full sm:w-auto px-12 py-5 bg-white/5 text-white border border-white/10 font-black rounded-2xl hover:bg-white/10 transition-all text-center uppercase tracking-widest text-xs backdrop-blur-sm hover:border-white/30">
                         Contact Sales
                     </button>
                 </div>
