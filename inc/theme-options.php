@@ -87,6 +87,12 @@ function jannat_it_acf_init() {
                     'type' => 'url',
                 ),
                 array(
+                    'key' => 'field_header_button_url',
+                    'label' => 'Header "Deploy Server" URL',
+                    'name' => 'header_button_url',
+                    'type' => 'url',
+                ),
+                array(
                     'key' => 'field_support_ticket_url',
                     'label' => 'Support Ticket URL',
                     'name' => 'support_ticket_url',

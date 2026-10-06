@@ -84,7 +84,9 @@ function jannat_it_get_theme_options() {
         ),
         'links' => array(
             'client_login' => $client_login,
-            'order_now'    => $whmcs_url . '/cart.php?a=add&pid=1',
+            'clientLogin'  => $client_login,
+            'order_now'    => $use_acf && get_field('header_button_url', 'option') ? get_field('header_button_url', 'option') : $whmcs_url . '/cart.php?a=add&pid=1',
+            'orderNow'     => $use_acf && get_field('header_button_url', 'option') ? get_field('header_button_url', 'option') : $whmcs_url . '/cart.php?a=add&pid=1',
             'whmcs_url'    => $whmcs_url,
             'facebook'     => $use_acf ? get_field('social_facebook', 'option') : '',
             'twitter'      => $use_acf ? get_field('social_twitter', 'option') : '',
