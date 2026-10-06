@@ -6,7 +6,7 @@
 
 function jannat_it_full_demo_importer() {
     // Only run if it hasn't been imported yet
-    if ( get_option('jannat_it_full_demo_imported_v1') ) {
+    if ( get_option('jannat_it_full_demo_imported_v3') ) {
         return;
     }
 
@@ -109,12 +109,12 @@ function jannat_it_full_demo_importer() {
             'post_status' => 'publish',
         ));
         if ( !is_wp_error($post_id) ) {
-            $term = term_exists($category_slug, 'hosting_category');
+            $term = term_exists($category_slug, 'plan_category');
             if (!$term) {
-                $term = wp_insert_term($category_name, 'hosting_category', array('slug' => $category_slug));
+                $term = wp_insert_term($category_name, 'plan_category', array('slug' => $category_slug));
             }
             if (!is_wp_error($term) && isset($term['term_id'])) {
-                wp_set_object_terms( $post_id, (int)$term['term_id'], 'hosting_category' );
+                wp_set_object_terms( $post_id, (int)$term['term_id'], 'plan_category' );
             }
             update_post_meta($post_id, 'price_monthly', $monthly);
             update_post_meta($post_id, 'price_yearly', $yearly);
@@ -141,6 +141,6 @@ function jannat_it_full_demo_importer() {
     insert_mock_plan('Elite Epyc', 'dedicated', 'Dedicated Servers', '169.99', '1699.90', '219.99', 'AMD EPYC 7313P, 16 Cores / 32 Threads, 128 GB RAM, 2x 1TB NVMe, 10Gbps Unmetered', true);
     insert_mock_plan('Titan Dual', 'dedicated', 'Dedicated Servers', '299.99', '2999.90', '399.99', 'Dual Xeon Gold 6130, 32 Cores / 64 Threads, 256 GB RAM, 4x 2TB NVMe, 10Gbps Unmetered', false);
 
-    update_option('jannat_it_full_demo_imported_v1', true);
+    update_option('jannat_it_full_demo_imported_v3', true);
 }
 add_action('admin_init', 'jannat_it_full_demo_importer');
