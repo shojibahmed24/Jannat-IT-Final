@@ -1,3 +1,4 @@
+import { useSEO } from '../hooks/useSEO';
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Server, Cpu, HardDrive, Check, Zap, Shield, Globe, ArrowRight, Network } from 'lucide-react';
@@ -42,6 +43,7 @@ const MOCK_DEDICATED_PLANS = [
 ];
 
 export default function DedicatedServers() {
+  useSEO({ title: 'Dedicated Servers - Jannat IT' });
   const { settings } = useApp();
   const { openChat } = useTawkChat();
   const [plans, setPlans] = useState<any[]>(MOCK_DEDICATED_PLANS);

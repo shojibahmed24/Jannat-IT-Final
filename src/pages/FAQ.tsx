@@ -1,3 +1,4 @@
+import { useSEO } from '../hooks/useSEO';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronDown, HelpCircle, MessageCircle } from 'lucide-react';
@@ -24,6 +25,7 @@ const MOCK_FAQS = [
 ];
 
 export default function FAQ() {
+  useSEO({ title: 'Frequently Asked Questions - Jannat IT' });
   const { openChat } = useTawkChat();
   const [activeQ, setActiveQ] = useState<string | null>(null);
   const [faqs, setFaqs] = useState<any[]>(MOCK_FAQS);

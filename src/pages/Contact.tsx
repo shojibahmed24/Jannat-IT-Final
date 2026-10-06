@@ -1,3 +1,4 @@
+import { useSEO } from '../hooks/useSEO';
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { Mail, MapPin, MessageSquare, Phone, Send, ChevronDown, CheckCircle2, Loader2 } from 'lucide-react';
@@ -6,6 +7,7 @@ import { useTawkChat } from '../hooks/useTawkChat';
 import { useApp } from '../context/AppContext';
 
 export default function Contact() {
+  useSEO({ title: 'Contact Us - Jannat IT' });
   const [formData, setFormData] = useState({ firstName: '', lastName: '', email: '', department: 'Sales Inquiry', message: '' });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const { settings } = useApp();

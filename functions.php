@@ -80,3 +80,48 @@ require_once get_template_directory() . '/inc/acf-pages.php';
 
 
 require_once get_template_directory() . '/inc/full-demo-importer.php';
+
+
+// Override 404 for React SPA Routes
+function jannat_it_react_routes_override() {
+    global $wp_query;
+    $react_routes = array('vps', 'rdp', 'dedicated', 'domains', 'about', 'contact', 'faq', 'affiliate', 'terms-of-service', 'privacy-policy', 'acceptable-use', 'blog', 'clientarea');
+    
+    $request = trim($_SERVER['REQUEST_URI'], '/');
+    $path = explode('?', $request)[0];
+    $path_parts = explode('/', $path);
+    $base_path = isset($path_parts[0]) ? $path_parts[0] : '';
+
+    if ( in_array($base_path, $react_routes) ) {
+        status_header( 200 );
+        $wp_query->is_404 = false;
+    }
+}
+add_action( 'template_redirect', 'jannat_it_react_routes_override' );
+
+// Override Document Title for React Routes
+function jannat_it_react_title_override($title) {
+    $request = trim($_SERVER['REQUEST_URI'], '/');
+    $path = explode('?', $request)[0];
+    $path_parts = explode('/', $path);
+    $base_path = isset($path_parts[0]) ? $path_parts[0] : '';
+    
+    $titles = array(
+        'vps' => 'Premium VPS Hosting',
+        'rdp' => 'Windows RDP Servers',
+        'dedicated' => 'Dedicated Servers',
+        'domains' => 'Domain Registration',
+        'about' => 'About Us',
+        'contact' => 'Contact Us',
+        'faq' => 'Frequently Asked Questions',
+        'affiliate' => 'Affiliate Program',
+        'clientarea' => 'Client Area'
+    );
+    
+    if (array_key_exists($base_path, $titles)) {
+        return $titles[$base_path] . ' - ' . get_bloginfo('name');
+    }
+    
+    return $title;
+}
+add_filter('pre_get_document_title', 'jannat_it_react_title_override', 999);

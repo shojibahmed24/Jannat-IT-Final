@@ -1,3 +1,4 @@
+import { useSEO } from '../hooks/useSEO';
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { 
@@ -45,6 +46,7 @@ const MOCK_VPS_PLANS = [
 ];
 
 export default function VPSHosting() {
+  useSEO({ title: 'Premium VPS Hosting - Jannat IT' });
   const { settings } = useApp();
   const [isYearly, setIsYearly] = useState(false);
   const [plans, setPlans] = useState<any[]>(MOCK_VPS_PLANS);

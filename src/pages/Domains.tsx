@@ -1,3 +1,4 @@
+import { useSEO } from '../hooks/useSEO';
 import React, { useState } from 'react';
 import { Search, CheckCircle2, Shield, Zap, Globe, RefreshCcw, XCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -6,6 +7,7 @@ import MagneticButton from '../components/ui/MagneticButton';
 import { useApp } from '../context/AppContext';
 
 export default function Domains() {
+  useSEO({ title: 'Domain Registration - Jannat IT' });
   const { settings } = useApp();
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);

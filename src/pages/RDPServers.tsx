@@ -1,3 +1,4 @@
+import { useSEO } from '../hooks/useSEO';
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { 
@@ -45,6 +46,7 @@ const MOCK_RDP_PLANS = [
 ];
 
 export default function RDPServers() {
+  useSEO({ title: 'Windows RDP Servers - Jannat IT' });
   const { settings } = useApp();
   const [isYearly, setIsYearly] = useState(false);
   const [plans, setPlans] = useState<any[]>(MOCK_RDP_PLANS);
