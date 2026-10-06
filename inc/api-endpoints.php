@@ -57,6 +57,21 @@ add_action( 'rest_api_init', 'jannat_it_register_api_endpoints' );
 
 function jannat_it_get_theme_options() {
     $use_acf = function_exists('get_field');
+    
+    // Parse promo text to split at " - " or " — " if present, so we have text and linkText
+    $promo_full = $use_acf ? get_field('promo_text', 'option') : 'Limited-time offer - save up to 55% on annual VPS plans';
+    if (!$promo_full) $promo_full = '';
+    $promo_parts = explode(' - ', $promo_full);
+    if (count($promo_parts) < 2) {
+        $promo_parts = explode(' — ', $promo_full);
+    }
+    
+    $promo_text = isset($promo_parts[0]) ? $promo_parts[0] : $promo_full;
+    $promo_link_text = isset($promo_parts[1]) ? $promo_parts[1] : '';
+
+    $client_login = $use_acf && get_field('client_login_url', 'option') ? get_field('client_login_url', 'option') : 'https://billing.jannatit.com/clientarea.php';
+    $whmcs_url = $use_acf && get_field('whmcs_url', 'option') ? get_field('whmcs_url', 'option') : 'https://billing.jannatit.com';
+
     $options = array(
         // Core Branding
         'siteTitle' => get_bloginfo('name'),
@@ -68,16 +83,18 @@ function jannat_it_get_theme_options() {
             'office_address' => $use_acf ? get_field('office_address', 'option') : '',
         ),
         'links' => array(
-            'client_login' => 'https://billing.jannatit.com/clientarea.php',
-            'order_now'    => 'https://billing.jannatit.com/cart.php?a=add&pid=1',
-            'whmcs_url'    => 'https://billing.jannatit.com',
+            'client_login' => $client_login,
+            'order_now'    => $whmcs_url . '/cart.php?a=add&pid=1',
+            'whmcs_url'    => $whmcs_url,
             'facebook'     => $use_acf ? get_field('social_facebook', 'option') : '',
             'twitter'      => $use_acf ? get_field('social_twitter', 'option') : '',
             'linkedin'     => $use_acf ? get_field('social_linkedin', 'option') : '',
         ),
-        'promo' => array(
-            'text' => $use_acf ? get_field('promo_text', 'option') : 'Limited-time offer � save up to 55% on annual VPS plans',
-            'link' => $use_acf ? get_field('promo_link', 'option') : '#pricing'
+        'promoBanner' => array(
+            'active'   => !empty($promo_full),
+            'text'     => $promo_text,
+            'linkText' => $promo_link_text,
+            'linkUrl'  => $use_acf ? get_field('promo_link', 'option') : '#pricing'
         ),
         'api' => array(
             'tawkto_id' => $use_acf ? get_field('tawkto_id', 'option') : '',
