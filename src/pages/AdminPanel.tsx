@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import AnimatedSection from '../components/ui/AnimatedSection';
 import { useApp, Service, UserProfile, Ticket } from '../context/AppContext';
 import { 
   Users, 
@@ -26,9 +27,14 @@ import {
 type AdminTab = 'overview' | 'users' | 'services' | 'tickets' | 'billing' | 'links' | 'settings';
 
 export default function AdminPanel() {
-  const { links, updateLink, loading, settings, updateSettings, systemStatus } = useApp();
+  const { links, updateLink, loading, settings, updateSettings, systemStatus, enablePolling, disablePolling } = useApp();
   const [activeTab, setActiveTab] = useState<AdminTab>('links');
   const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    enablePolling();
+    return () => disablePolling();
+  }, [enablePolling, disablePolling]);
 
   if (loading) return (
     <div className="min-h-screen bg-[#070708] flex items-center justify-center">
@@ -59,7 +65,7 @@ export default function AdminPanel() {
   return (
     <div className="flex min-h-screen bg-[#070708]">
       {/* Admin Sidebar */}
-      <aside className="w-64 border-r border-white/5 bg-[#0A0A0B] flex flex-col">
+      <aside className="w-64 border-r border-white/10 bg-[#0A0A0B] flex flex-col">
         <div className="p-8">
           <div className="flex items-center gap-3 mb-10">
             <div className="w-8 h-8 bg-orange-600 rounded-lg flex items-center justify-center shadow-lg shadow-orange-600/20">
@@ -75,7 +81,7 @@ export default function AdminPanel() {
           </nav>
         </div>
 
-        <div className="mt-auto p-8 border-t border-white/5">
+        <div className="mt-auto p-8 border-t border-white/10">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white font-bold">AD</div>
             <div>
@@ -139,7 +145,7 @@ function AdminOverview({ totalUsers, totalServices, openTickets, activities, sys
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-        <section className="bg-white/[0.02] border border-white/5 rounded-3xl p-8">
+        <AnimatedSection className="bg-white/[0.02] border border-white/10 rounded-3xl p-8">
           <h3 className="text-lg font-bold text-white mb-6">Recent User Activity</h3>
           <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
             {activities && activities.length > 0 ? (
@@ -155,16 +161,16 @@ function AdminOverview({ totalUsers, totalServices, openTickets, activities, sys
               <div className="text-center py-10 text-slate-600 text-sm italic">No recent activity</div>
             )}
           </div>
-        </section>
+        </AnimatedSection>
 
-        <section className="bg-white/[0.02] border border-white/5 rounded-3xl p-8">
+        <AnimatedSection className="bg-white/[0.02] border border-white/10 rounded-3xl p-8">
           <h3 className="text-lg font-bold text-white mb-6">Infrastructure Load</h3>
           <div className="space-y-6">
             <LoadBar label="CPU Clusters" value={systemStatus?.cpuLoad || 0} />
             <LoadBar label="RAM Usage" value={systemStatus?.ramLoad || 0} color="bg-orange-600" />
             <LoadBar label="IP Address Pool" value={Math.round(Math.min(100, (totalServices / 100) * 100))} color="bg-blue-600" />
           </div>
-        </section>
+        </AnimatedSection>
       </div>
     </div>
   );
@@ -192,7 +198,7 @@ function UserManagement({ users, searchQuery, setSearchQuery }: any) {
         </div>
       </header>
 
-      <div className="bg-white/[0.02] border border-white/5 rounded-2xl overflow-hidden">
+      <div className="bg-white/[0.02] border border-white/10 rounded-2xl overflow-hidden">
         <table className="w-full text-left">
           <thead className="bg-white/5 text-[10px] uppercase tracking-widest text-slate-500 font-bold">
             <tr>
@@ -264,7 +270,7 @@ function ServiceManagement({ services, searchQuery, setSearchQuery }: any) {
         </div>
       </header>
 
-      <div className="bg-white/[0.02] border border-white/5 rounded-2xl overflow-hidden">
+      <div className="bg-white/[0.02] border border-white/10 rounded-2xl overflow-hidden">
         <table className="w-full text-left">
           <thead className="bg-white/5 text-[10px] uppercase tracking-widest text-slate-500 font-bold">
             <tr>
@@ -321,7 +327,7 @@ function TicketManagement({ tickets }: any) {
         <p className="text-slate-500">Monitor and respond to customer queries.</p>
       </header>
 
-      <div className="bg-white/[0.02] border border-white/5 rounded-2xl overflow-hidden">
+      <div className="bg-white/[0.02] border border-white/10 rounded-2xl overflow-hidden">
         <table className="w-full text-left">
           <thead className="bg-white/5 text-[10px] uppercase tracking-widest text-slate-500 font-bold">
             <tr>
@@ -419,11 +425,11 @@ function BillingManagement({ settings, onUpdate }: any) {
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <section className="space-y-6">
+        <AnimatedSection className="space-y-6">
           <h3 className="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2">
             <DollarSign className="w-4 h-4 text-orange-500" /> Domain Pricing
           </h3>
-          <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-8 space-y-6">
+          <div className="bg-white/[0.02] border border-white/10 rounded-3xl p-8 space-y-6">
             <div className="space-y-2">
               <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-1">Base Price (.com)</label>
               <div className="relative">
@@ -432,19 +438,19 @@ function BillingManagement({ settings, onUpdate }: any) {
                   type="number" 
                   value={domainPrice}
                   onChange={(e) => setDomainPrice(e.target.value)}
-                  className="w-full bg-white/[0.03] border border-white/5 rounded-xl py-3 pl-8 pr-4 text-sm text-white focus:outline-none focus:border-orange-500/50"
+                  className="w-full bg-white/[0.03] border border-white/10 rounded-xl py-3 pl-8 pr-4 text-sm text-white focus:outline-none focus:border-orange-500/50"
                 />
               </div>
             </div>
             <p className="text-[10px] text-slate-600 leading-relaxed italic">This price will be used globally for domain availability checks and ordering.</p>
           </div>
-        </section>
+        </AnimatedSection>
 
-        <section className="space-y-6">
+        <AnimatedSection className="space-y-6">
           <h3 className="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2">
             <TrendingUp className="w-4 h-4 text-orange-500" /> VPS Markup
           </h3>
-          <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-8 space-y-6">
+          <div className="bg-white/[0.02] border border-white/10 rounded-3xl p-8 space-y-6">
             <div className="space-y-2">
               <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-1">Global Markup (%)</label>
               <div className="relative">
@@ -452,33 +458,33 @@ function BillingManagement({ settings, onUpdate }: any) {
                   type="number" 
                   value={vpsMarkup}
                   onChange={(e) => setVpsMarkup(e.target.value)}
-                  className="w-full bg-white/[0.03] border border-white/5 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-orange-500/50"
+                  className="w-full bg-white/[0.03] border border-white/10 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-orange-500/50"
                 />
                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">%</span>
               </div>
             </div>
             <p className="text-[10px] text-slate-600 leading-relaxed italic">Add a percentage markup to all base WHMCS product prices shown on the site.</p>
           </div>
-        </section>
+        </AnimatedSection>
 
-        <section className="space-y-6">
+        <AnimatedSection className="space-y-6">
           <h3 className="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2">
             <ExternalLink className="w-4 h-4 text-orange-500" /> Checkout Integration
           </h3>
-          <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-8 space-y-8">
+          <div className="bg-white/[0.02] border border-white/10 rounded-3xl p-8 space-y-8">
             <div className="space-y-4">
               <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-1">Checkout Mode</label>
               <div className="grid grid-cols-2 gap-4">
                 <button 
                   onClick={() => setCheckoutMode('whmcs')}
-                  className={`flex items-center justify-center gap-3 p-4 rounded-xl border transition-all ${checkoutMode === 'whmcs' ? 'border-orange-500 bg-orange-600/10 text-white' : 'border-white/5 bg-white/[0.01] text-slate-500 hover:text-white'}`}
+                  className={`flex items-center justify-center gap-3 p-4 rounded-xl border transition-all ${checkoutMode === 'whmcs' ? 'border-orange-500 bg-orange-600/10 text-white' : 'border-white/10 bg-white/[0.01] text-slate-500 hover:text-white'}`}
                 >
                   <RefreshCw className={`w-4 h-4 ${checkoutMode === 'whmcs' ? 'text-orange-500' : ''}`} />
                   <span className="text-sm font-bold">WHMCS API</span>
                 </button>
                 <button 
                   onClick={() => setCheckoutMode('manual')}
-                  className={`flex items-center justify-center gap-3 p-4 rounded-xl border transition-all ${checkoutMode === 'manual' ? 'border-orange-500 bg-orange-600/10 text-white' : 'border-white/5 bg-white/[0.01] text-slate-500 hover:text-white'}`}
+                  className={`flex items-center justify-center gap-3 p-4 rounded-xl border transition-all ${checkoutMode === 'manual' ? 'border-orange-500 bg-orange-600/10 text-white' : 'border-white/10 bg-white/[0.01] text-slate-500 hover:text-white'}`}
                 >
                   <ArrowRight className={`w-4 h-4 ${checkoutMode === 'manual' ? 'text-orange-500' : ''}`} />
                   <span className="text-sm font-bold">Manual Redirect</span>
@@ -487,7 +493,7 @@ function BillingManagement({ settings, onUpdate }: any) {
             </div>
 
             {checkoutMode === 'whmcs' ? (
-              <div className="space-y-6 pt-4 border-t border-white/5">
+              <div className="space-y-6 pt-4 border-t border-white/10">
                 <div className="space-y-2">
                   <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-1">WHMCS Base URL</label>
                   <input 
@@ -495,7 +501,7 @@ function BillingManagement({ settings, onUpdate }: any) {
                     value={whmcsUrl}
                     onChange={(e) => setWhmcsUrl(e.target.value)}
                     placeholder="https://billing.yourdomain.com"
-                    className={`w-full bg-white/[0.03] border rounded-xl py-3 px-4 text-sm text-white focus:outline-none transition-all ${whmcsUrl.includes('yourdomain.com') ? 'border-orange-500/50' : 'border-white/5 focus:border-orange-500/50'}`}
+                    className={`w-full bg-white/[0.03] border rounded-xl py-3 px-4 text-sm text-white focus:outline-none transition-all ${whmcsUrl.includes('yourdomain.com') ? 'border-orange-500/50' : 'border-white/10 focus:border-orange-500/50'}`}
                   />
                   {whmcsUrl.includes('yourdomain.com') && (
                     <p className="text-[9px] text-orange-500 font-bold uppercase tracking-tighter mt-1 flex items-center gap-1">
@@ -510,12 +516,12 @@ function BillingManagement({ settings, onUpdate }: any) {
                     value={whmcsApiUrl}
                     onChange={(e) => setWhmcsApiUrl(e.target.value)}
                     placeholder="https://billing.yourdomain.com/includes/api.php"
-                    className={`w-full bg-white/[0.03] border rounded-xl py-3 px-4 text-sm text-white focus:outline-none transition-all ${whmcsApiUrl.includes('yourdomain.com') ? 'border-orange-500/50' : 'border-white/5 focus:border-orange-500/50'}`}
+                    className={`w-full bg-white/[0.03] border rounded-xl py-3 px-4 text-sm text-white focus:outline-none transition-all ${whmcsApiUrl.includes('yourdomain.com') ? 'border-orange-500/50' : 'border-white/10 focus:border-orange-500/50'}`}
                   />
                 </div>
               </div>
             ) : (
-              <div className="space-y-6 pt-4 border-t border-white/5">
+              <div className="space-y-6 pt-4 border-t border-white/10">
                 <div className="space-y-2">
                   <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-1">Manual Checkout URL</label>
                   <input 
@@ -523,23 +529,23 @@ function BillingManagement({ settings, onUpdate }: any) {
                     value={manualRedirectUrl}
                     onChange={(e) => setManualRedirectUrl(e.target.value)}
                     placeholder="https://billing.yourdomain.com/cart.php?a=add&pid=1"
-                    className="w-full bg-white/[0.03] border border-white/5 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-orange-500/50"
+                    className="w-full bg-white/[0.03] border border-white/10 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-orange-500/50"
                   />
                   <p className="text-[10px] text-slate-600 leading-relaxed italic">Users will be redirected to this exact URL when they click "Checkout". WHMCS API will be bypassed.</p>
                 </div>
               </div>
             )}
           </div>
-        </section>
+        </AnimatedSection>
       </div>
 
-      <section className="space-y-6">
+      <AnimatedSection className="space-y-6">
         <h3 className="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2">
           <CreditCard className="w-4 h-4 text-orange-500" /> Active Payment Methods
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {settings.paymentMethods.map((m: any) => (
-            <div key={m.id} className="bg-white/[0.02] border border-white/5 rounded-2xl p-6 flex justify-between items-center group hover:bg-white/[0.04] transition-colors">
+            <div key={m.id} className="bg-white/[0.02] border border-white/10 rounded-2xl p-6 flex justify-between items-center group hover:bg-white/[0.04] transition-colors">
               <div>
                 <div className="text-sm font-bold text-white">{m.name}</div>
                 <div className="text-[10px] text-slate-600 uppercase tracking-widest">{m.active ? 'Enabled' : 'Disabled'}</div>
@@ -553,14 +559,14 @@ function BillingManagement({ settings, onUpdate }: any) {
             </div>
           ))}
         </div>
-      </section>
+      </AnimatedSection>
     </div>
   );
 }
 
 function AdminStatCard({ label, value, change, icon: Icon, color }: any) {
   return (
-    <div className="p-6 bg-white/[0.02] border border-white/5 rounded-3xl group hover:border-white/10 transition-all">
+    <div className="p-6 bg-white/[0.02] border border-white/10 rounded-3xl group hover:border-white/10 transition-all">
       <div className="flex justify-between items-start mb-4">
         <div className={`w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center ${color}`}>
           <Icon className="w-6 h-6" />
@@ -656,7 +662,7 @@ function LinkManagement({ links, onUpdate }: any) {
         {allKeys.map((slug) => {
           const url = links[slug] || '';
           return (
-            <div key={slug} className="bg-white/[0.02] border border-white/5 rounded-2xl p-8 space-y-4">
+            <div key={slug} className="bg-white/[0.02] border border-white/10 rounded-2xl p-8 space-y-4">
               <div className="flex justify-between items-center">
                 <div>
                   <h4 className="text-sm font-bold text-white uppercase tracking-widest">{slug.replace(/_/g, ' ')}</h4>
@@ -673,7 +679,7 @@ function LinkManagement({ links, onUpdate }: any) {
                   {isSaving === slug ? <RefreshCw className="w-4 h-4 animate-spin" /> : (url ? 'Edit URL' : 'Add URL')}
                 </button>
               </div>
-              <div className="bg-black/40 rounded-lg p-3 overflow-hidden text-ellipsis whitespace-nowrap border border-white/5 min-h-[40px]">
+              <div className="bg-black/40 rounded-lg p-3 overflow-hidden text-ellipsis whitespace-nowrap border border-white/10 min-h-[40px]">
                 <code className="text-xs text-slate-400">{url || 'Not set (will use fallback)'}</code>
               </div>
             </div>

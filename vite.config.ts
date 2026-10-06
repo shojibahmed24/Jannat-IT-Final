@@ -8,8 +8,15 @@ export default defineConfig(() => {
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, '.'),
+        '@': path.resolve(import.meta.dirname, '.'),
       },
+    },
+    build: {
+      manifest: true,
+      outDir: 'dist',
+      rollupOptions: {
+        input: 'src/main.tsx',
+      }
     },
     server: {
       port: 3000,

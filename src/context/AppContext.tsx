@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import axios from 'axios';
-import { supabase } from '../lib/supabase';
+
 
 enum OperationType {
   CREATE = 'create',
@@ -111,6 +111,10 @@ interface AppContextType {
   markNotificationAsRead: (id: string) => Promise<void>;
   reinstallOS: (id: string, os: string) => Promise<void>;
   getOSTemplates: (id: string) => Promise<any[]>;
+  /** Start polling /api/system/status every 30s. Call when entering Admin Panel. */
+  enablePolling: () => void;
+  /** Stop polling. Call when leaving Admin Panel. */
+  disablePolling: () => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -124,6 +128,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
     'hosting_order': 'https://billing.jannatit.com/cart.php?gid=3'
   });
   const [settings, setSettings] = useState<any>({
+    siteTitle: 'Jannat IT',
+    siteLogo: '',
+    promoBanner: {
+      active: true,
+      text: "Limited-time offer",
+      linkText: "save up to 55% on annual VPS plans",
+      linkUrl: "#pricing"
+    },
     domainPrice: 9.99,
     vpsMarkup: 0,
     whmcsUrl: 'https://billing.jannatit.com',
@@ -139,8 +151,22 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const fetchSettings = async () => {
     try {
-      const response = await axios.get('/api/settings');
-      setSettings(response.data);
+      // Check if WordPress API is available
+      const wpData = (window as any).wpData;
+      if (wpData && wpData.apiUrl) {
+        const response = await axios.get(`${wpData.apiUrl}jannat-it/v1/options`);
+        if (response.data) {
+          // Merge WP options to match our settings structure
+          setSettings((prev: any) => ({ ...prev, ...response.data }));
+          if (response.data.links) {
+            setLinks((prev: any) => ({ ...prev, ...response.data.links }));
+          }
+        }
+      } else {
+        // Fallback to mock API / Supabase
+        const response = await axios.get('/api/settings');
+        setSettings(response.data);
+      }
     } catch (err) {
       console.error("Failed to fetch settings:", err);
     } finally {
@@ -150,6 +176,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const fetchLinks = async () => {
     try {
+      const wpData = (window as any).wpData;
+      if (wpData) return; // If WP is active, links are fetched via options API
+      
       const response = await axios.get('/api/links');
       if (Array.isArray(response.data)) {
         const linkMap: Record<string, string> = {};
@@ -185,37 +214,35 @@ export function AppProvider({ children }: { children: ReactNode }) {
     fetchLinks();
     fetchSettings();
     
-    // In Supabase, we could use realtime subscriptions, but for settings, a simple fetch is fine
-    // Or we could set up a subscription to the 'settings' table here
-    const subscription = supabase
-      .channel('public:settings')
-      .on('postgres_changes' as any, { event: '*', table: 'settings', filter: 'id=eq.global' }, (payload: any) => {
-        if (payload.new && (payload.new as any).value) {
-          setSettings((payload.new as any).value);
-        }
-      })
-      .subscribe();
+    }, []);
 
-    return () => {
-      subscription.unsubscribe();
-    };
+  const [polling, setPolling] = useState(false);
+
+  const fetchSystemStatus = async () => {
+    try {
+      const res = await fetch('/api/system/status');
+      const data = await res.json();
+      setSystemStatus(data);
+    } catch (err) {
+      console.error("Failed to fetch system status:", err);
+    }
+  };
+
+  useEffect(() => {
+    // Initial fetch once, so we have data if needed
+    fetchSystemStatus();
   }, []);
 
   useEffect(() => {
-    const fetchSystemStatus = async () => {
-      try {
-        const res = await fetch('/api/system/status');
-        const data = await res.json();
-        setSystemStatus(data);
-      } catch (err) {
-        console.error("Failed to fetch system status:", err);
-      }
-    };
-
-    fetchSystemStatus();
+    if (!polling) return;
+    
+    fetchSystemStatus(); // Fetch immediately when polling is enabled
     const interval = setInterval(fetchSystemStatus, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [polling]);
+
+  const enablePolling = () => setPolling(true);
+  const disablePolling = () => setPolling(false);
 
   return (
     <AppContext.Provider value={{ 
@@ -226,7 +253,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
       links,
       updateLink,
       fetchLinks,
-      // Provide dummy/empty values for any remaining components that might still reference them
       user: null,
       services: [],
       invoices: [],
@@ -248,7 +274,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
       logActivity: async () => {},
       markNotificationAsRead: async () => {},
       reinstallOS: async () => {},
-      getOSTemplates: async () => []
+      getOSTemplates: async () => [],
+      enablePolling,
+      disablePolling
     }}>
       {children}
     </AppContext.Provider>

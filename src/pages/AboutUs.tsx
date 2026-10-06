@@ -1,86 +1,189 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { Users, History, Award, Globe, Heart, Shield } from 'lucide-react';
+import { Users, Globe, Heart, Shield, Server, Activity, Target } from 'lucide-react';
+import CountUp from '../components/ui/CountUp';
+import AnimatedSection from '../components/ui/AnimatedSection';
+import { useApp } from '../context/AppContext';
+
+const TIMELINE = [
+  { year: '2018', title: 'The Beginning', desc: 'Started with a single server rack and a vision to make cloud hosting accessible.' },
+  { year: '2020', title: 'Global Expansion', desc: 'Opened our first international data centers in Europe and Singapore.' },
+  { year: '2023', title: 'Enterprise Network', desc: 'Upgraded to a 10Tbps global backbone with advanced DDoS mitigation.' },
+  { year: '2026', title: 'Industry Leaders', desc: 'Recognized globally as a premier provider of high-performance cloud instances.' }
+];
+
+const CORE_VALUES = [
+  {
+    icon: <Heart className="w-8 h-8 text-orange-500" />,
+    title: "Customer Obsessed",
+    desc: "Your success is our success. We provide 24/7 expert support that actually solves your problems, not just reads from a script.",
+    colSpan: "md:col-span-2"
+  },
+  {
+    icon: <Shield className="w-8 h-8 text-emerald-500" />,
+    title: "Uncompromising Security",
+    desc: "Enterprise-grade protection is built into our core, not sold as an add-on.",
+    colSpan: "md:col-span-1"
+  },
+  {
+    icon: <Activity className="w-8 h-8 text-blue-500" />,
+    title: "Extreme Performance",
+    desc: "We exclusively use top-tier AMD EPYC processors and NVMe storage.",
+    colSpan: "md:col-span-1"
+  },
+  {
+    icon: <Target className="w-8 h-8 text-purple-500" />,
+    title: "Transparent & Honest",
+    desc: "No hidden fees, no confusing pricing tiers. What you see is exactly what you get, with straightforward billing every month.",
+    colSpan: "md:col-span-2"
+  }
+];
 
 export default function AboutUs() {
+  const [pageData, setPageData] = useState<any>(null);
+  
+  useEffect(() => {
+    const fetchPage = async () => {
+      const wpData = (window as any).wpData;
+      if (wpData && wpData.apiUrl) {
+        try {
+          const res = await fetch(`${wpData.apiUrl}jannat-it/v1/page/about`);
+          const data = await res.json();
+          if (data && !data.error) setPageData(data);
+        } catch (err) {}
+      }
+    };
+    fetchPage();
+  }, []);
+
+  // Fallback to mock data if API fails or is loading
+  const stats = {
+    users: pageData?.acf?.stats_active_users || '50000',
+    datacenters: pageData?.acf?.stats_datacenters || '16',
+    uptime: pageData?.acf?.stats_uptime || '99.99'
+  };
+
   return (
-    <div className="py-20">
-      <div className="max-w-7xl mx-auto px-6">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-20"
-        >
-          <h1 className="text-4xl lg:text-6xl font-bold text-white mb-6">Our Mission & Vision</h1>
-          <p className="text-xl text-slate-400 max-w-3xl mx-auto">
-            Since 2018, Jannat IT has been dedicated to providing lightning-fast, secure, and reliable hosting solutions for businesses of all sizes.
-          </p>
-        </motion.div>
+    <div className="pt-24 sm:pt-32 pb-12 sm:pb-24 relative z-10 overflow-hidden bg-[#0A0A0B]">
+      
+      {/* Background Ambience */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-orange-600/10 blur-[150px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-red-600/5 blur-[120px] rounded-full pointer-events-none" />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-32">
-          <div className="space-y-8">
-            <div>
-              <h2 className="text-3xl font-bold text-white mb-4">Empowering the Future of Web</h2>
-              <p className="text-slate-400 leading-relaxed">
-                Jannat IT was founded with a simple goal: to make high-performance hosting accessible and affordable. We believe that every developer and business deserves enterprise-grade infrastructure without the enterprise-grade price tag.
-              </p>
+      <div className="max-w-7xl mx-auto px-6 relative">
+        
+        {/* 1. Hero Section (Abstract Globe/Network) */}
+        <AnimatedSection className="mb-16 md:mb-32">
+          <div className="text-center max-w-4xl mx-auto">
+            <div className="relative w-32 h-32 mx-auto mb-8 flex items-center justify-center">
+              {/* CSS Rotating Rings */}
+              <div className="absolute inset-0 border-2 border-orange-500/30 rounded-full animate-[spin_8s_linear_infinite]" />
+              <div className="absolute inset-2 border-2 border-red-500/30 rounded-full animate-[spin_6s_linear_infinite_reverse]" />
+              <div className="absolute inset-4 border border-white/10 rounded-full bg-[#111] flex items-center justify-center shadow-[0_0_30px_rgba(249,115,22,0.2)]">
+                <Globe className="w-10 h-10 text-orange-500" />
+              </div>
             </div>
-            <div className="grid grid-cols-2 gap-8">
-              <div>
-                <div className="text-4xl font-bold text-orange-500 mb-2">50k+</div>
-                <div className="text-sm text-slate-500 uppercase tracking-widest font-bold">Active Users</div>
-              </div>
-              <div>
-                <div className="text-4xl font-bold text-orange-500 mb-2">120+</div>
-                <div className="text-sm text-slate-500 uppercase tracking-widest font-bold">Data Centers</div>
-              </div>
-              <div>
-                <div className="text-4xl font-bold text-orange-500 mb-2">99.9%</div>
-                <div className="text-sm text-slate-500 uppercase tracking-widest font-bold">Uptime Record</div>
-              </div>
-              <div>
-                <div className="text-4xl font-bold text-orange-500 mb-2">24/7</div>
-                <div className="text-sm text-slate-500 uppercase tracking-widest font-bold">Expert Support</div>
-              </div>
+            
+            <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-black text-white mb-6 tracking-tight leading-tight">
+              Empowering the <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">
+                Digital World
+              </span>
+            </h1>
+            <p className="text-xl text-slate-400 leading-relaxed">
+              We are a team of passionate engineers, developers, and cloud experts dedicated to providing rock-solid infrastructure for the modern web.
+            </p>
+          </div>
+        </AnimatedSection>
+
+        {/* 2. Floating Counter Metrics (Glassmorphism Cards) */}
+        <AnimatedSection delay={0.2} className="mb-40">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-3xl p-10 text-center hover:bg-white/[0.05] transition-colors relative overflow-hidden group">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-1 bg-orange-500 rounded-b-full opacity-50 group-hover:opacity-100 transition-opacity" />
+              <Users className="w-10 h-10 text-orange-500 mx-auto mb-6" />
+              <h3 className="text-5xl font-black text-white mb-2">
+                <CountUp end={parseInt(stats.users.replace(/\D/g, ''))} suffix="+" />
+              </h3>
+              <p className="text-slate-400 font-bold uppercase tracking-widest text-sm">Active Users</p>
+            </div>
+
+            <div className="bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-3xl p-10 text-center hover:bg-white/[0.05] transition-colors relative overflow-hidden group">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-1 bg-red-500 rounded-b-full opacity-50 group-hover:opacity-100 transition-opacity" />
+              <Server className="w-10 h-10 text-red-500 mx-auto mb-6" />
+              <h3 className="text-5xl font-black text-white mb-2">
+                <CountUp end={parseInt(stats.datacenters.replace(/\D/g, ''))} />
+              </h3>
+              <p className="text-slate-400 font-bold uppercase tracking-widest text-sm">Global Datacenters</p>
+            </div>
+
+            <div className="bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-3xl p-10 text-center hover:bg-white/[0.05] transition-colors relative overflow-hidden group">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-1 bg-emerald-500 rounded-b-full opacity-50 group-hover:opacity-100 transition-opacity" />
+              <Activity className="w-10 h-10 text-emerald-500 mx-auto mb-6" />
+              <h3 className="text-5xl font-black text-white mb-2">
+                <CountUp end={parseFloat(stats.uptime.replace(/[^\d.]/g, ''))} decimals={2} suffix="%" />
+              </h3>
+              <p className="text-slate-400 font-bold uppercase tracking-widest text-sm">Uptime Guarantee</p>
             </div>
           </div>
-          <div className="relative">
-            <div className="aspect-square bg-gradient-to-br from-orange-600/20 to-red-600/20 rounded-3xl border border-white/10 flex items-center justify-center p-12">
-              <Users className="w-full h-full text-orange-500/50" />
-            </div>
-            <div className="absolute -top-6 -right-6 p-6 bg-[#0A0A0B] border border-white/10 rounded-2xl shadow-2xl">
-              <Award className="w-8 h-8 text-orange-500 mb-2" />
-              <div className="text-white font-bold">Award Winning</div>
-              <div className="text-xs text-slate-500">Infrastructure 2025</div>
-            </div>
+        </AnimatedSection>
+
+        {/* 3. Our Journey (Vertical Timeline) */}
+        <div className="mb-40">
+          <AnimatedSection className="text-center mb-10 md:mb-16">
+            <h2 className="text-3xl md:text-5xl font-black text-white mb-4">Our Journey</h2>
+            <p className="text-slate-400">Milestones that defined our path to excellence.</p>
+          </AnimatedSection>
+
+          <div className="relative max-w-4xl mx-auto px-2 sm:px-0">
+            {/* Center Line */}
+            <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-orange-500 via-red-500 to-transparent md:-translate-x-1/2 opacity-20" />
+            
+            {TIMELINE.map((item, idx) => {
+              const isLeft = idx % 2 === 0;
+              return (
+                <AnimatedSection 
+                  key={idx} 
+                  delay={0.2 + (idx * 0.1)} 
+                  className={`relative flex flex-col md:flex-row items-start ${isLeft ? 'md:justify-start' : 'md:justify-end'} mb-12 pl-16 md:pl-0 w-full`}
+                >
+                  {/* Glowing Node */}
+                  <div className={`absolute top-5 md:top-0 left-[23px] md:left-auto ${isLeft ? 'md:left-1/2' : 'md:left-1/2'} w-5 h-5 rounded-full bg-orange-500 shadow-[0_0_20px_#f97316] md:-translate-x-1/2 z-10 ring-4 ring-[#0A0A0B]`} />
+                  
+                  <div className={`w-full md:w-[45%] ${isLeft ? 'md:text-right' : 'md:text-left'} bg-[#111] md:bg-transparent p-5 sm:p-6 md:p-0 rounded-2xl border border-white/5 md:border-none`}>
+                    <div className="text-orange-500 font-black text-xl mb-2">{item.year}</div>
+                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-3">{item.title}</h3>
+                    <p className="text-slate-400 text-sm sm:text-base leading-relaxed">{item.desc}</p>
+                  </div>
+                </AnimatedSection>
+              );
+            })}
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-32">
-          {[
-            { icon: Heart, title: "Customer Obsessed", desc: "We put our customers at the heart of everything we do, providing world-class support around the clock." },
-            { icon: Shield, title: "Security First", desc: "Our infrastructure is built with security as a core principle, protecting your data with enterprise-grade tools." },
-            { icon: Globe, title: "Global Thinking", desc: "We operate globally to ensure your services are close to your users, no matter where they are." }
-          ].map((item, idx) => (
-            <div key={idx} className="p-10 rounded-3xl bg-white/[0.02] border border-white/5">
-              <item.icon className="w-10 h-10 text-orange-500 mb-6" />
-              <h3 className="text-xl font-bold text-white mb-4">{item.title}</h3>
-              <p className="text-slate-400 text-sm leading-relaxed">{item.desc}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="p-12 rounded-[3rem] bg-orange-600 relative overflow-hidden text-center">
-          <div className="relative z-10">
-            <h2 className="text-4xl font-bold text-white mb-6">Want to join our team?</h2>
-            <p className="text-white/80 text-lg mb-10 max-w-2xl mx-auto">We're always looking for passionate individuals who want to help us build the next generation of cloud infrastructure.</p>
-            <button className="px-10 py-4 bg-white text-orange-600 font-bold rounded-2xl hover:bg-slate-100 transition-all">
-              View Open Positions
-            </button>
+        {/* 4. Core Values (Bento Grid) */}
+        <AnimatedSection>
+          <div className="text-center mb-10 md:mb-16">
+            <h2 className="text-3xl md:text-5xl font-black text-white mb-4">Core Values</h2>
+            <p className="text-slate-400">The principles that drive everything we do.</p>
           </div>
-          <div className="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -ml-32 -mt-32" />
-          <div className="absolute bottom-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-32 -mb-32" />
-        </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {CORE_VALUES.map((val, idx) => (
+              <div 
+                key={idx} 
+                className={`bg-white/[0.02] border border-white/10 rounded-3xl p-8 md:p-10 hover:bg-white/[0.04] transition-all duration-300 group ${val.colSpan}`}
+              >
+                <div className="mb-6 transform group-hover:scale-110 transition-transform duration-300 origin-left">
+                  {val.icon}
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-4">{val.title}</h3>
+                <p className="text-slate-400 leading-relaxed text-lg">{val.desc}</p>
+              </div>
+            ))}
+          </div>
+        </AnimatedSection>
+
       </div>
     </div>
   );
