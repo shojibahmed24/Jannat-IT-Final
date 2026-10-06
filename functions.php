@@ -77,7 +77,7 @@ function jannat_it_add_module_to_scripts( $tag, $handle, $src ) {
 }
 add_filter( 'script_loader_tag', 'jannat_it_add_module_to_scripts', 10, 3 );
 require_once get_template_directory() . '/inc/acf-pages.php';
-<?php
+
 
 function jannat_it_auto_import_demo_data() {
     // Only run if it hasn't been imported yet
