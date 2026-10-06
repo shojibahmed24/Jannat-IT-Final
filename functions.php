@@ -79,7 +79,4 @@ add_filter( 'script_loader_tag', 'jannat_it_add_module_to_scripts', 10, 3 );
 require_once get_template_directory() . '/inc/acf-pages.php';
 
 
-<?php
-
-
 require_once get_template_directory() . '/inc/full-demo-importer.php';
