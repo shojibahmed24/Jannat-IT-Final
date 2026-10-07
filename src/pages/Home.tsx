@@ -106,7 +106,7 @@ export default function Home() {
           
           <AnimatedSection className="text-center lg:text-left">
             <div className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs sm:text-sm font-bold mb-6 sm:mb-8 mx-auto lg:mx-0">
-              <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Next-Gen Cloud Infrastructure
+              <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> High-Speed NVMe Cloud VPS
             </div>
             
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black mb-5 sm:mb-6 tracking-tight leading-[1.08]">

@@ -203,8 +203,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   <div className="flex items-center gap-4">
                     <a 
                       href={links.clientLogin || 'https://billing.jannatit.com/clientarea.php'} 
-                      className="px-5 py-2.5 text-sm font-bold text-white hover:text-orange-400 transition-colors"
-                    >
+                      className="px-6 py-2.5 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white text-sm font-bold rounded-full shadow-lg shadow-orange-500/25 transition-all hover:-translate-y-0.5 active:translate-y-0 mr-2"
+                      >
                       Client Area
                     </a>
                     <a 
