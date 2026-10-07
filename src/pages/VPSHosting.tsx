@@ -113,7 +113,7 @@ export default function VPSHosting() {
             <div className="order-1 lg:order-1 text-center lg:text-left flex flex-col items-center lg:items-start">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-500 text-sm font-bold mb-8 mx-auto lg:mx-0">
                 <Zap className="w-4 h-4 fill-orange-500" />
-                Next-Gen Cloud Infrastructure
+                High-Speed NVMe Cloud VPS
               </div>
               <h1 className="text-3xl sm:text-4xl md:text-6xl font-black text-white mb-6 tracking-tight leading-tight">
                 Deploy High-Performance <br />
@@ -122,7 +122,7 @@ export default function VPSHosting() {
                 </span>
               </h1>
               <p className="text-xl text-slate-400 mb-10 leading-relaxed max-w-lg mx-auto lg:mx-0">
-                Unleash raw power with AMD EPYC™ processors, 100% NVMe storage, and a blazing fast 10Gbps network. Provisioned in 60 seconds.
+                Buy cheap VPS hosting powered by AMD EPYC™ processors and 100% NVMe storage, and a blazing fast 10Gbps network. Provisioned in 60 seconds.
               </p>
 
               {/* OS Badges */}
