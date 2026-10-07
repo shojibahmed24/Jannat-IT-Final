@@ -49,10 +49,10 @@ function jannat_it_scripts() {
                 $main_js = $manifest['src/main.tsx']['file'];
                 $main_css = isset( $manifest['src/main.tsx']['css'] ) ? $manifest['src/main.tsx']['css'][0] : '';
                 
-                wp_enqueue_script( 'jannat-it-main', $dist_uri . '/' . $main_js, array(), JANNAT_IT_VERSION, true );
+                wp_enqueue_script( 'jannat-it-main', $dist_uri . '/' . $main_js, array(), time(), true );
                 
                 if ( $main_css ) {
-                    wp_enqueue_style( 'jannat-it-style', $dist_uri . '/' . $main_css, array(), JANNAT_IT_VERSION );
+                    wp_enqueue_style( 'jannat-it-style', $dist_uri . '/' . $main_css, array(), time() );
                 }
             }
         }
