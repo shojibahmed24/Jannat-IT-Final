@@ -98,31 +98,13 @@ function jannat_it_react_routes_override() {
 }
 add_action( 'template_redirect', 'jannat_it_react_routes_override' );
 
-// Override Document Title for React Routes
-function jannat_it_react_title_override($title) {
-    global $wp;
-    $request = trim($wp->request, '/');
-    $path_parts = explode('/', $request);
-    $base_path = isset($path_parts[0]) ? $path_parts[0] : '';
-    
-    $titles = array(
-        'vps' => 'Premium VPS Hosting',
-        'rdp' => 'Windows RDP Servers',
-        'dedicated' => 'Dedicated Servers',
-        'domains' => 'Domain Registration',
-        'about' => 'About Us',
-        'contact' => 'Contact Us',
-        'faq' => 'Frequently Asked Questions',
-        'affiliate' => 'Affiliate Program',
-        'clientarea' => 'Client Area'
-    );
-    
-    if (array_key_exists($base_path, $titles)) {
-        return $titles[$base_path] . ' - ' . get_bloginfo('name');
-    }
-    
-    return $title;
-}
-add_filter('pre_get_document_title', 'jannat_it_react_title_override', 999);
+// Document Title is now handled by inc/seo-meta.php
 
 require_once get_template_directory() . '/inc/native-theme-options.php';
+
+
+// SEO & Performance Additions
+require_once get_template_directory() . '/inc/seo-meta.php';
+require_once get_template_directory() . '/inc/seo-sitemap.php';
+require_once get_template_directory() . '/inc/seo-schema.php';
+
