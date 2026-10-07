@@ -91,6 +91,10 @@ function jannat_it_get_theme_options() {
             'facebook'     => $use_acf ? get_field('social_facebook', 'option') : '',
             'twitter'      => $use_acf ? get_field('social_twitter', 'option') : '',
             'linkedin'     => $use_acf ? get_field('social_linkedin', 'option') : '',
+            'telegram'     => $use_acf ? get_field('social_telegram', 'option') : '',
+            'whatsapp'     => $use_acf ? get_field('social_whatsapp', 'option') : '',
+            'telegram_url' => $use_acf ? get_field('social_telegram', 'option') : '',
+            'whatsapp_url' => $use_acf ? get_field('social_whatsapp', 'option') : '',
         ),
         'promoBanner' => array(
             'active'   => !empty($promo_full),

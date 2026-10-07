@@ -123,6 +123,19 @@ function jannat_it_acf_init() {
                     'name' => 'social_linkedin',
                     'type' => 'url',
                 ),
+                array(
+                    'key' => 'field_social_telegram',
+                    'label' => 'Telegram URL',
+                    'name' => 'social_telegram',
+                    'type' => 'url',
+                ),
+                array(
+                    'key' => 'field_social_whatsapp',
+                    'label' => 'WhatsApp Number / URL',
+                    'name' => 'social_whatsapp',
+                    'type' => 'url',
+                    'instructions' => 'e.g., https://wa.me/8801234567890',
+                ),
 
                 // Tab: API Keys
                 array(
