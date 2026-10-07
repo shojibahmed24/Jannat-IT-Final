@@ -81,7 +81,7 @@ function jannat_it_full_demo_importer() {
             'post_status' => 'publish'
         ));
         update_post_meta($post_id, 'role', $role);
-    }
+    };
     $insert_mock_testimonial("Ahmed R.", "CEO, TechStartup BD", "Jannat IT's infrastructure has been rock solid. We migrated our entire SaaS platform and haven't had a single minute of downtime in 6 months.");
     $insert_mock_testimonial("Sarah K.", "CTO, GameHost Pro", "Their DDoS protection saved us during a massive attack. The team responded within minutes and our services stayed online throughout.");
     $insert_mock_testimonial("David L.", "DevOps Lead, CloudApp", "We migrated from a major cloud provider and now save 60% monthly. The NVMe performance is incredible - our database queries are 3x faster.");
@@ -94,7 +94,7 @@ function jannat_it_full_demo_importer() {
             'post_type' => 'faq',
             'post_status' => 'publish'
         ));
-    }
+    };
     $insert_mock_faq("What is the uptime guarantee?", "We guarantee 99.9% network and power uptime. If we fail to meet this, you are eligible for account credits under our SLA.");
     $insert_mock_faq("Do you provide DDoS protection?", "Yes, all plans include enterprise-grade L3/L4 DDoS mitigation to keep your services online during attacks.");
     $insert_mock_faq("Can I upgrade my plan later?", "Absolutely. You can scale your resources up or down at any time seamlessly through our client portal.");
@@ -124,7 +124,7 @@ function jannat_it_full_demo_importer() {
             $pid = $popular ? '1' : '2';
             update_post_meta($post_id, 'whmcs_link', 'https://my.jannatit.net/cart.php?a=add&pid=' . $pid);
         }
-    }
+    };
     // VPS Plans
     $insert_mock_plan('Starter Cloud', 'vps', 'VPS Hosting', '4.99', '49.90', '9.99', '1 vCPU Core, 2GB RAM, 40GB NVMe SSD, 1Gbps Network', false);
     $insert_mock_plan('Professional', 'vps', 'VPS Hosting', '9.99', '99.90', '19.99', '2 vCPU Cores, 4GB RAM, 80GB NVMe SSD, 2Gbps Network', false);
