@@ -23,6 +23,7 @@ const Legal = lazy(() => import('./pages/Legal'));
 
 import { useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'motion/react';
+import FloatingContact from './components/FloatingContact';
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -67,6 +68,7 @@ export default function App() {
       <Router>
         <Layout>
           <AnimatedRoutes />
+            <FloatingContact />
         </Layout>
       </Router>
     </AppProvider>
