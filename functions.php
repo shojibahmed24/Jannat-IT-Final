@@ -84,12 +84,11 @@ require_once get_template_directory() . '/inc/full-demo-importer.php';
 
 // Override 404 for React SPA Routes
 function jannat_it_react_routes_override() {
-    global $wp_query;
+    global $wp_query, $wp;
     $react_routes = array('vps', 'rdp', 'dedicated', 'domains', 'about', 'contact', 'faq', 'affiliate', 'terms-of-service', 'privacy-policy', 'acceptable-use', 'blog', 'clientarea');
     
-    $request = trim($_SERVER['REQUEST_URI'], '/');
-    $path = explode('?', $request)[0];
-    $path_parts = explode('/', $path);
+    $request = trim($wp->request, '/');
+    $path_parts = explode('/', $request);
     $base_path = isset($path_parts[0]) ? $path_parts[0] : '';
 
     if ( in_array($base_path, $react_routes) ) {
@@ -101,9 +100,9 @@ add_action( 'template_redirect', 'jannat_it_react_routes_override' );
 
 // Override Document Title for React Routes
 function jannat_it_react_title_override($title) {
-    $request = trim($_SERVER['REQUEST_URI'], '/');
-    $path = explode('?', $request)[0];
-    $path_parts = explode('/', $path);
+    global $wp;
+    $request = trim($wp->request, '/');
+    $path_parts = explode('/', $request);
     $base_path = isset($path_parts[0]) ? $path_parts[0] : '';
     
     $titles = array(

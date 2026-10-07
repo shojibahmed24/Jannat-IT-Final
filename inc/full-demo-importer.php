@@ -73,7 +73,7 @@ function jannat_it_full_demo_importer() {
     update_option('options_twitter_url', '#');
 
     // 5. TESTIMONIALS
-    function insert_mock_testimonial($name, $role, $quote) {
+    $insert_mock_testimonial = function($name, $role, $quote) {
         $post_id = wp_insert_post(array(
             'post_title' => $name,
             'post_content' => $quote,
@@ -82,12 +82,12 @@ function jannat_it_full_demo_importer() {
         ));
         update_post_meta($post_id, 'role', $role);
     }
-    insert_mock_testimonial("Ahmed R.", "CEO, TechStartup BD", "Jannat IT's infrastructure has been rock solid. We migrated our entire SaaS platform and haven't had a single minute of downtime in 6 months.");
-    insert_mock_testimonial("Sarah K.", "CTO, GameHost Pro", "Their DDoS protection saved us during a massive attack. The team responded within minutes and our services stayed online throughout.");
-    insert_mock_testimonial("David L.", "DevOps Lead, CloudApp", "We migrated from a major cloud provider and now save 60% monthly. The NVMe performance is incredible - our database queries are 3x faster.");
+    $insert_mock_testimonial("Ahmed R.", "CEO, TechStartup BD", "Jannat IT's infrastructure has been rock solid. We migrated our entire SaaS platform and haven't had a single minute of downtime in 6 months.");
+    $insert_mock_testimonial("Sarah K.", "CTO, GameHost Pro", "Their DDoS protection saved us during a massive attack. The team responded within minutes and our services stayed online throughout.");
+    $insert_mock_testimonial("David L.", "DevOps Lead, CloudApp", "We migrated from a major cloud provider and now save 60% monthly. The NVMe performance is incredible - our database queries are 3x faster.");
 
     // 6. FAQS
-    function insert_mock_faq($q, $a) {
+    $insert_mock_faq = function($q, $a) {
         wp_insert_post(array(
             'post_title' => $q,
             'post_content' => $a,
@@ -95,14 +95,14 @@ function jannat_it_full_demo_importer() {
             'post_status' => 'publish'
         ));
     }
-    insert_mock_faq("What is the uptime guarantee?", "We guarantee 99.9% network and power uptime. If we fail to meet this, you are eligible for account credits under our SLA.");
-    insert_mock_faq("Do you provide DDoS protection?", "Yes, all plans include enterprise-grade L3/L4 DDoS mitigation to keep your services online during attacks.");
-    insert_mock_faq("Can I upgrade my plan later?", "Absolutely. You can scale your resources up or down at any time seamlessly through our client portal.");
-    insert_mock_faq("What payment methods do you accept?", "We accept MasterCard, Crypto, Wise, and Payoneer for maximum convenience.");
-    insert_mock_faq("How long does server deployment take?", "VPS and RDP instances are deployed automatically within 60 seconds of payment confirmation. Dedicated servers typically take 15 to 45 minutes depending on the hardware configuration and OS installation.");
+    $insert_mock_faq("What is the uptime guarantee?", "We guarantee 99.9% network and power uptime. If we fail to meet this, you are eligible for account credits under our SLA.");
+    $insert_mock_faq("Do you provide DDoS protection?", "Yes, all plans include enterprise-grade L3/L4 DDoS mitigation to keep your services online during attacks.");
+    $insert_mock_faq("Can I upgrade my plan later?", "Absolutely. You can scale your resources up or down at any time seamlessly through our client portal.");
+    $insert_mock_faq("What payment methods do you accept?", "We accept MasterCard, Crypto, Wise, and Payoneer for maximum convenience.");
+    $insert_mock_faq("How long does server deployment take?", "VPS and RDP instances are deployed automatically within 60 seconds of payment confirmation. Dedicated servers typically take 15 to 45 minutes depending on the hardware configuration and OS installation.");
 
     // 7. HOSTING PLANS (Matching exactly with React default)
-    function insert_mock_plan($title, $category_slug, $category_name, $monthly, $yearly, $old, $specs, $popular) {
+    $insert_mock_plan = function($title, $category_slug, $category_name, $monthly, $yearly, $old, $specs, $popular) {
         $post_id = wp_insert_post(array(
             'post_title' => $title,
             'post_type' => 'hosting_plan',
@@ -126,20 +126,20 @@ function jannat_it_full_demo_importer() {
         }
     }
     // VPS Plans
-    insert_mock_plan('Starter Cloud', 'vps', 'VPS Hosting', '4.99', '49.90', '9.99', '1 vCPU Core, 2GB RAM, 40GB NVMe SSD, 1Gbps Network', false);
-    insert_mock_plan('Professional', 'vps', 'VPS Hosting', '9.99', '99.90', '19.99', '2 vCPU Cores, 4GB RAM, 80GB NVMe SSD, 2Gbps Network', false);
-    insert_mock_plan('Business', 'vps', 'VPS Hosting', '14.99', '149.90', '29.99', '4 vCPU Cores, 8GB RAM, 160GB NVMe SSD, 5Gbps Network', true);
-    insert_mock_plan('Enterprise', 'vps', 'VPS Hosting', '29.99', '299.90', '49.99', '8 vCPU Cores, 16GB RAM, 320GB NVMe SSD, 10Gbps Network', false);
+    $insert_mock_plan('Starter Cloud', 'vps', 'VPS Hosting', '4.99', '49.90', '9.99', '1 vCPU Core, 2GB RAM, 40GB NVMe SSD, 1Gbps Network', false);
+    $insert_mock_plan('Professional', 'vps', 'VPS Hosting', '9.99', '99.90', '19.99', '2 vCPU Cores, 4GB RAM, 80GB NVMe SSD, 2Gbps Network', false);
+    $insert_mock_plan('Business', 'vps', 'VPS Hosting', '14.99', '149.90', '29.99', '4 vCPU Cores, 8GB RAM, 160GB NVMe SSD, 5Gbps Network', true);
+    $insert_mock_plan('Enterprise', 'vps', 'VPS Hosting', '29.99', '299.90', '49.99', '8 vCPU Cores, 16GB RAM, 320GB NVMe SSD, 10Gbps Network', false);
     // RDP Plans
-    insert_mock_plan('User RDP', 'rdp', 'RDP Servers', '6.99', '69.90', '12.99', '2 vCPU Cores, 4GB RAM, 50GB NVMe, 1Gbps Port, No Admin Access', false);
-    insert_mock_plan('Pro RDP', 'rdp', 'RDP Servers', '9.99', '99.90', '19.99', '4 vCPU Cores, 8GB RAM, 100GB NVMe, 1Gbps Port, Full Admin Access', false);
-    insert_mock_plan('Admin RDP', 'rdp', 'RDP Servers', '14.99', '149.90', '29.99', '6 vCPU Cores, 12GB RAM, 150GB NVMe, 2Gbps Port, Full Admin Access', true);
-    insert_mock_plan('Forex/Botting', 'rdp', 'RDP Servers', '24.99', '249.90', '39.99', '8 vCPU Cores, 16GB RAM, 200GB NVMe, 5Gbps Port, Full Admin Access', false);
+    $insert_mock_plan('User RDP', 'rdp', 'RDP Servers', '6.99', '69.90', '12.99', '2 vCPU Cores, 4GB RAM, 50GB NVMe, 1Gbps Port, No Admin Access', false);
+    $insert_mock_plan('Pro RDP', 'rdp', 'RDP Servers', '9.99', '99.90', '19.99', '4 vCPU Cores, 8GB RAM, 100GB NVMe, 1Gbps Port, Full Admin Access', false);
+    $insert_mock_plan('Admin RDP', 'rdp', 'RDP Servers', '14.99', '149.90', '29.99', '6 vCPU Cores, 12GB RAM, 150GB NVMe, 2Gbps Port, Full Admin Access', true);
+    $insert_mock_plan('Forex/Botting', 'rdp', 'RDP Servers', '24.99', '249.90', '39.99', '8 vCPU Cores, 16GB RAM, 200GB NVMe, 5Gbps Port, Full Admin Access', false);
     // Dedicated Plans
-    insert_mock_plan('Power E3', 'dedicated', 'Dedicated Servers', '79.99', '799.90', '99.99', 'Intel Xeon E3-1230, 4 Cores / 8 Threads, 32 GB RAM, 500 GB NVMe, 1Gbps Unmetered', false);
-    insert_mock_plan('Advanced Epyc', 'dedicated', 'Dedicated Servers', '119.99', '1199.90', '149.99', 'AMD EPYC 7232P, 8 Cores / 16 Threads, 64 GB RAM, 1 TB NVMe, 5Gbps Unmetered', false);
-    insert_mock_plan('Elite Epyc', 'dedicated', 'Dedicated Servers', '169.99', '1699.90', '219.99', 'AMD EPYC 7313P, 16 Cores / 32 Threads, 128 GB RAM, 2x 1TB NVMe, 10Gbps Unmetered', true);
-    insert_mock_plan('Titan Dual', 'dedicated', 'Dedicated Servers', '299.99', '2999.90', '399.99', 'Dual Xeon Gold 6130, 32 Cores / 64 Threads, 256 GB RAM, 4x 2TB NVMe, 10Gbps Unmetered', false);
+    $insert_mock_plan('Power E3', 'dedicated', 'Dedicated Servers', '79.99', '799.90', '99.99', 'Intel Xeon E3-1230, 4 Cores / 8 Threads, 32 GB RAM, 500 GB NVMe, 1Gbps Unmetered', false);
+    $insert_mock_plan('Advanced Epyc', 'dedicated', 'Dedicated Servers', '119.99', '1199.90', '149.99', 'AMD EPYC 7232P, 8 Cores / 16 Threads, 64 GB RAM, 1 TB NVMe, 5Gbps Unmetered', false);
+    $insert_mock_plan('Elite Epyc', 'dedicated', 'Dedicated Servers', '169.99', '1699.90', '219.99', 'AMD EPYC 7313P, 16 Cores / 32 Threads, 128 GB RAM, 2x 1TB NVMe, 10Gbps Unmetered', true);
+    $insert_mock_plan('Titan Dual', 'dedicated', 'Dedicated Servers', '299.99', '2999.90', '399.99', 'Dual Xeon Gold 6130, 32 Cores / 64 Threads, 256 GB RAM, 4x 2TB NVMe, 10Gbps Unmetered', false);
 
     update_option('jannat_it_full_demo_imported_v3', true);
 }
