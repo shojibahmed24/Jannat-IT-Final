@@ -58,9 +58,16 @@ add_action( 'rest_api_init', 'jannat_it_register_api_endpoints' );
 function jannat_it_get_theme_options() {
     $use_acf = function_exists('get_field');
     
-    // Parse promo text to split at " - " or " — " if present, so we have text and linkText
-    $promo_full = $use_acf ? get_field('promo_text', 'option') : 'Limited-time offer - save up to 55% on annual VPS plans';
-    if (!$promo_full) $promo_full = '';
+    // Helper to safely get option from ACF or Native
+    $get_opt = function($key, $default = '') use ($use_acf) {
+        if ($use_acf && get_field($key, 'option')) {
+            return get_field($key, 'option');
+        }
+        $val = get_option('options_' . $key);
+        return !empty($val) ? $val : $default;
+    };
+    
+    $promo_full = $get_opt('promo_text', 'Limited-time offer - save up to 55% on annual VPS plans');
     $promo_parts = explode(' - ', $promo_full);
     if (count($promo_parts) < 2) {
         $promo_parts = explode(' — ', $promo_full);
@@ -69,45 +76,45 @@ function jannat_it_get_theme_options() {
     $promo_text = isset($promo_parts[0]) ? $promo_parts[0] : $promo_full;
     $promo_link_text = isset($promo_parts[1]) ? $promo_parts[1] : '';
 
-    $client_login = $use_acf && get_field('client_login_url', 'option') ? get_field('client_login_url', 'option') : 'https://billing.jannatit.com/clientarea.php';
-    $whmcs_url = $use_acf && get_field('whmcs_url', 'option') ? get_field('whmcs_url', 'option') : 'https://billing.jannatit.com';
+    $client_login = $get_opt('client_login_url', 'https://billing.jannatit.com/clientarea.php');
+    $whmcs_url = $get_opt('whmcs_url', 'https://billing.jannatit.com');
+    $header_btn = $get_opt('header_button_url', $whmcs_url . '/cart.php?a=add&pid=1');
 
     $options = array(
-        // Core Branding
         'siteTitle' => get_bloginfo('name'),
         'siteLogo'  => has_custom_logo() ? wp_get_attachment_image_url(get_theme_mod('custom_logo'), 'full') : '',
         'company' => array(
             'name' => 'Jannat IT',
-            'support_email'  => $use_acf ? get_field('support_email', 'option') : 'support@jannatit.com',
-            'phone'          => $use_acf ? get_field('phone_number', 'option') : '+880 1234 567890',
-            'office_address' => $use_acf ? get_field('office_address', 'option') : '',
+            'support_email'  => $get_opt('support_email', 'support@jannatit.com'),
+            'phone'          => $get_opt('phone_number', '+880 1234 567890'),
+            'office_address' => $get_opt('office_address', ''),
         ),
         'links' => array(
             'client_login' => $client_login,
             'clientLogin'  => $client_login,
-            'order_now'    => $use_acf && get_field('header_button_url', 'option') ? get_field('header_button_url', 'option') : $whmcs_url . '/cart.php?a=add&pid=1',
-            'orderNow'     => $use_acf && get_field('header_button_url', 'option') ? get_field('header_button_url', 'option') : $whmcs_url . '/cart.php?a=add&pid=1',
+            'order_now'    => $header_btn,
+            'orderNow'     => $header_btn,
             'whmcs_url'    => $whmcs_url,
-            'facebook'     => $use_acf ? get_field('social_facebook', 'option') : '',
-            'twitter'      => $use_acf ? get_field('social_twitter', 'option') : '',
-            'linkedin'     => $use_acf ? get_field('social_linkedin', 'option') : '',
-            'telegram'     => $use_acf ? get_field('social_telegram', 'option') : '',
-            'whatsapp'     => $use_acf ? get_field('social_whatsapp', 'option') : '',
-            'telegram_url' => $use_acf ? get_field('social_telegram', 'option') : '',
-            'whatsapp_url' => $use_acf ? get_field('social_whatsapp', 'option') : '',
+            'facebook'     => $get_opt('social_facebook', ''),
+            'twitter'      => $get_opt('social_twitter', ''),
+            'linkedin'     => $get_opt('social_linkedin', ''),
+            'telegram'     => $get_opt('social_telegram', ''),
+            'whatsapp'     => $get_opt('social_whatsapp', ''),
+            'telegram_url' => $get_opt('social_telegram', ''),
+            'whatsapp_url' => $get_opt('social_whatsapp', ''),
         ),
         'promoBanner' => array(
             'active'   => !empty($promo_full),
             'text'     => $promo_text,
             'linkText' => $promo_link_text,
-            'linkUrl'  => $use_acf ? get_field('promo_link', 'option') : '#pricing'
+            'linkUrl'  => $get_opt('promo_link', '#pricing')
         ),
         'api' => array(
-            'tawkto_id' => $use_acf ? get_field('tawkto_id', 'option') : '',
+            'tawkto_id' => $get_opt('tawkto_id', ''),
         ),
         'vpsMarkup' => 0,
         'domainPrice' => '9.99',
-        'domain_pricing' => $use_acf ? get_field('domain_pricing', 'option') : null
+        'domain_pricing' => $get_opt('domain_pricing', null)
     );
     return rest_ensure_response( $options );
 }

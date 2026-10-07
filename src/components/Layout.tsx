@@ -22,7 +22,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     { name: 'VPS Hosting', path: '/vps', url: '/vps' },
     { name: 'Windows RDP', path: '/rdp', url: '/rdp' },
     { name: 'Dedicated Servers', path: '/dedicated', url: '/dedicated' },
-    { name: 'Domain Names', path: '/domains', url: '/domains' }
+    { name: 'Domain Names', path: '/domains', url: '/domains' },
+      { name: 'Blog', path: '/blog', url: '/blog' }
   ]);
   const [footerCompany, setFooterCompany] = useState<any[]>([
     { name: 'About Us', path: '/about', url: '/about' },

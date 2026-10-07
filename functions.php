@@ -124,3 +124,5 @@ function jannat_it_react_title_override($title) {
     return $title;
 }
 add_filter('pre_get_document_title', 'jannat_it_react_title_override', 999);
+
+require_once get_template_directory() . '/inc/native-theme-options.php';
