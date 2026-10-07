@@ -112,3 +112,36 @@ require_once get_template_directory() . '/inc/seo-schema.php';
 require_once get_template_directory() . '/inc/seo-bridge.php';
 
 require_once get_template_directory() . '/inc/seo-performance.php';
+
+
+// Auto-inject Blog menu item if missing
+add_action('admin_init', 'jannat_it_force_add_blog_menu');
+function jannat_it_force_add_blog_menu() {
+    if (get_option('jannat_it_blog_menu_added_v2') === 'yes') return;
+
+    $menu = wp_get_nav_menu_object('Primary Menu');
+    if ($menu) {
+        $items = wp_get_nav_menu_items($menu->term_id);
+        $has_blog = false;
+        
+        if (is_array($items)) {
+            foreach ($items as $item) {
+                if (strcasecmp($item->title, 'Blog') === 0 || strcasecmp($item->title, 'Blog & News') === 0) {
+                    $has_blog = true;
+                    break;
+                }
+            }
+        }
+
+        if (!$has_blog) {
+            wp_update_nav_menu_item($menu->term_id, 0, array(
+                'menu-item-title'  => 'Blog',
+                'menu-item-url'    => '/blog',
+                'menu-item-status' => 'publish',
+                // Position after domains (domains is usually at index 3 or 4)
+                'menu-item-position' => 5,
+            ));
+        }
+        update_option('jannat_it_blog_menu_added_v2', 'yes');
+    }
+}
