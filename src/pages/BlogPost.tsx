@@ -123,7 +123,7 @@ export default function BlogPost() {
           {post.thumbnail && (
             <AnimatedSection delay={0.1}>
               <div className="rounded-3xl overflow-hidden mb-12 border border-white/5 shadow-2xl">
-                <img src={post.thumbnail} alt={post.title} className="w-full h-auto object-cover" />
+                <img loading="lazy" src={post.thumbnail} alt={post.title} className="w-full h-auto object-cover" />
               </div>
             </AnimatedSection>
           )}

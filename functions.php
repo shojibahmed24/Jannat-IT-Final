@@ -110,3 +110,5 @@ require_once get_template_directory() . '/inc/seo-schema.php';
 
 
 require_once get_template_directory() . '/inc/seo-bridge.php';
+
+require_once get_template_directory() . '/inc/seo-performance.php';
